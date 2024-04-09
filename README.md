@@ -12,4 +12,7 @@ iii. node -v
 3. Start server: npm start
 4. Open http://172.22.132.192:8006/
 
+5. npm install react-router-dom --save
+6. npm install styled-components 
+
 
