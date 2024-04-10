@@ -3,16 +3,23 @@
 Steps for installing and running the React App
 1. Navigate to the bacon-front-end directory
 
-2. Install Node.js \n
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \n
-    nvm install 16 \n
+2. Install Node.js
+    ```bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+    nvm install 16
     node -v
+    ```
 
-4. npm install react-router-dom --save
-5. npm install styled-components
-   
-7. Start server: npm start
-8. Open http://172.22.132.192:8006/
+4. Install packages
+   ```bash
+   npm install react-router-dom --save
+   npm install styled-components
+   ```
+7. Start server
+    ```bash
+    npm start
+    ```
+10. Open http://172.22.132.192:8006/
 
 Steps for setting up test db and running its associated Flask API
 1. Install miniconda following [quick command line install instructions for Linux](https://docs.anaconda.com/free/miniconda/index.html):
