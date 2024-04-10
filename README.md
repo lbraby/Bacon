@@ -3,10 +3,10 @@
 Steps for installing and running the React App
 1. Navigate to the bacon-front-end directory
 
-2. Install Node.js
-    i. curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-    ii. nvm install 16
-    iii. node -v
+2. Install Node.js \n
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \n
+    nvm install 16 \n
+    node -v
 
 4. npm install react-router-dom --save
 5. npm install styled-components
