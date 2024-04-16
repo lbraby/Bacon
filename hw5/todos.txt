@@ -7,3 +7,9 @@
 NOTE: procedures are like the function we typicalluy work with (do this or that based on input). functions take in input and give an output based on that input (much simpler)
 
 look at code in course dropbox (april 9 class) on student machine for how procedures and functions are written
+
+compiling package
+- @hw5pack
+- @hw5packbody
+- to call function: select hw5pack.funcname(arg) from dual;
+
