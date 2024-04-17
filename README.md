@@ -30,7 +30,7 @@ Steps for setting up test db and running its associated Flask API
     rm -rf ~/miniconda3/miniconda.sh
     ~/miniconda3/bin/conda init bash
     ```
-2. activate conda environment
+2. Activate conda environment
    ```
    conda activate
    ```
@@ -45,15 +45,32 @@ Steps for setting up test db and running its associated Flask API
     ```bash
     export LD_LIBRARY_PATH=/u01/app/oracle/product/11.2.0/xe/lib$LD_LIBRARY_PATH
     ```
-6. load test data into sqlplus database
+6. Load test data into sqlplus database
     ```bash
     bash build_db.sh
     ```
     - assumes you have an existing user setup with username 'guest' and password 'guest'
-7. launch Flask API
+7. Launch Flask API
     ```bash    
     python testAPI.py
     ```
     - `GET /` returns all entries in test table
     - `GET /<id>` returns entry with specified id
+
+Steps for setting up movie db
+1. Navigate to `bacon-back-end/build-movie-db`
+2. unzip csv files containing data to be loaded
+    ```
+    cd csvfiles/
+    unzip cast_data.zip
+    unzip directors_data.zip
+    unzip movie_data.zip
+    unzip person_data.zip
+    cd ../
+    ```
+3. Build `movie`, `person`, and `cast_and_crew` tables
+    ```
+    source buildmoviedb.sh
+    ```
+    - buildmoviedb.sh assumes that there exists a sqlplus user with username 'guest' and password 'guest'.
 
