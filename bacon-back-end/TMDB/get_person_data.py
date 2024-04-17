@@ -27,7 +27,7 @@ def main():
             if "name" not in person or "profile_path" not in person or "known_for_department" not in person:
                 continue
 
-            if person["known_for_department"] != "Acting" && person["known_for_department"] != "Directing":
+            if person["known_for_department"] != "Acting" and person["known_for_department"] != "Directing":
                 continue
 
             person_metadata.append([id, person["name"], person["profile_path"], person["known_for_department"]])
@@ -41,7 +41,7 @@ def main():
                 person_metadata.clear()
 
                 with open("person_checkpoint.json", "w") as checkpoint_file:
-                    json.dump({"last_processed_line": line_number, "total_lines": 3357799, status": "incomplete"}, checkpoint_file)
+                    json.dump({"last_processed_line": line_number, "total_lines": 3357799, "status": "incomplete"}, checkpoint_file)
                 
         # run complete
         with open("person_checkpoint.json", "w") as checkpoint_file:

@@ -45,7 +45,7 @@ def main():
                 
         # run complete
         with open("directors_checkpoint.json", "w") as checkpoint_file:
-            json.dump({"last_processed_line": line_number, "status": "complete"}, checkpoint_file)
+            json.dump({"last_processed_line": line_number, "total_lines": 916746, "status": "complete"}, checkpoint_file)
 
 if __name__ == "__main__":
     main()
