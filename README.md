@@ -58,19 +58,25 @@ Steps for setting up test db and running its associated Flask API
     - `GET /<id>` returns entry with specified id
 
 Steps for setting up movie db
-1. Navigate to `bacon-back-end/build-movie-db`
+1. Navigate to `bacon-back-end/`
+2. Create and activate new conda environment using requirements file
+    ```
+    conda activate
+    conda create –-name {env name} --file requirements.txt
+    conda activate {env name}
+    ```
 2. unzip csv files containing data to be loaded
     ```
-    cd csvfiles/
+    cd build-movie-db/csvfiles/
     unzip cast_data.zip
     unzip directors_data.zip
     unzip movie_data.zip
     unzip person_data.zip
-    cd ../
+    cd ../../
     ```
 3. Build `movie`, `person`, and `cast_and_crew` tables
     ```
-    source buildmoviedb.sh
+    source build-movie-db/buildmoviedb.sh
     ```
     - buildmoviedb.sh assumes that there exists a sqlplus user with username 'guest' and password 'guest'.
 
