@@ -58,9 +58,8 @@ Steps for setting up test db and running its associated Flask API
     - `GET /<id>` returns entry with specified id
 
 Steps for setting up movie db
-1. If you have not yet gotten test db in previous section to run, go to previous section. Setting up the movide db assumes a user with username 'guest' and password 'guest' already exists.
-2. Navigate to `bacon-back-end/build-movie-db`
-3. unzip csv files containing data to be loaded
+1. Navigate to `bacon-back-end/build-movie-db`
+2. unzip csv files containing data to be loaded
     ```
     cd csvfiles/
     unzip cast_data.zip
@@ -69,9 +68,9 @@ Steps for setting up movie db
     unzip person_data.zip
     cd ../
     ```
-4. Build `movie`, `person`, and `cast_and_crew` tables
+3. Build `movie`, `person`, and `cast_and_crew` tables
     ```
     source buildmoviedb.sh
     ```
-    - assumes you have a sqlplus user set up with username 'guest' and password 'guest'
+    - buildmoviedb.sh assumes that there exists a sqlplus user with username 'guest' and password 'guest'.
 
