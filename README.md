@@ -65,7 +65,7 @@ Steps for setting up movie db
     conda create –-name {env name} --file requirements.txt
     conda activate {env name}
     ```
-2. unzip csv files containing data to be loaded
+3. unzip csv files containing data to be loaded
     ```
     cd build-movie-db/csvfiles/
     unzip cast_data.zip
@@ -74,7 +74,7 @@ Steps for setting up movie db
     unzip person_data.zip
     cd ../../
     ```
-3. Build `movie`, `person`, and `cast_and_crew` tables
+4. Build `movie`, `person`, and `cast_and_crew` tables
     ```
     source build-movie-db/buildmoviedb.sh
     ```
