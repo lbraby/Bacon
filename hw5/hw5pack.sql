@@ -11,9 +11,15 @@ is
     return sale.prod_id%type;
   function getprodprice(id product.prod_id%type)
     return product.price%type;
+  function getprodcost(id product.prod_id%type)
+    return product.cost%type;
   function addition(n1 float, n2 float)
+    return float;
+  function subtraction(n1 float, n2 float)
     return float;
   function multiplication(n1 float, n2 float)
     return float;
+  procedure custtransactions (cid customer.cust_id%type);
+  procedure mytransactions (sp_id salesperson.salpers_id%type);
 end hw5pack;
 /
