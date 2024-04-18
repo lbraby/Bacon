@@ -13,6 +13,8 @@ is
     return product.price%type;
   function getprodcost(id product.prod_id%type)
     return product.cost%type;
+  function getproddesc(id product.prod_id%type)
+    return product.prod_desc%type;
   function addition(n1 float, n2 float)
     return float;
   function subtraction(n1 float, n2 float)

@@ -128,6 +128,22 @@ is
 	return null;
   end;
 
+  function getproddesc(id product.prod_id%type)
+    return product.prod_desc%type
+  is
+    prd product.prod_desc%type;
+  begin
+    select prod_desc
+    into prd
+    from product
+    where prod_id = id;
+    return prd;
+  exception
+    when no_data_found then
+        dbms_output.put_line('getproddesc error ' || id || ' not found');
+        return null;
+  end;
+
   function addition(n1 float, n2 float)
     return float
   is
@@ -142,7 +158,7 @@ is
   is
     s float := 0.00;
   begin
-    s := n1 + n2;
+    s := n1 - n2;
     return s;
   end;
 
@@ -177,10 +193,10 @@ is
       exit when sales_c%notfound;
       counter := counter + 1;
       total := total + multiplication(getqty(sid), getprodprice(getprodid(sid)));
-      dbms_output.put_line('   ' || sid || '. ' || multiplication(getqty(sid), getprodprice(getprodid(sid))));
+      dbms_output.put_line(counter || '. ' || getqty(sid) || ' ' || getproddesc(getprodid(sid)) || 's ($' || multiplication(getqty(sid), getprodprice(getprodid(sid))) || ')');
     end loop;
     close sales_c;
-    dbms_output.put_line('Sum: ' || total);
+    dbms_output.put_line('Sum: $' || total);
     if counter = 0 then
       raise nothing;
     end if;
@@ -191,6 +207,7 @@ is
     when no_data_found then
       dbms_output.put_line('no such customer');
   end;
+
   procedure mytransactions (sp_id salesperson.salpers_id%type)
   is 
     cursor sales_c (id salesperson.salpers_id%type)
@@ -215,10 +232,12 @@ is
       counter := counter + 1;
       total_rev := total_rev + multiplication(getqty(sid), getprodprice(getprodid(sid)));
       total_cost := total_cost + multiplication(getqty(sid), getprodcost(getprodid(sid)));
-      dbms_output.put_line('   ' || sid || '. ' || multiplication(getqty(sid), getprodprice(getprodid(sid))));
+      dbms_output.put_line(counter || '. ' || getqty(sid) || ' ' || getproddesc(getprodid(sid)) || 's (revenue: $' || multiplication(getqty(sid), getprodprice(getprodid(sid))) || ', cost: $' || multiplication(getqty(sid), getprodcost(getprodid(sid))) || ')');
+
     end loop;
     close sales_c;
-    dbms_output.put_line('Total Cost: ' || total_rev);
+    dbms_output.put_line('Total Revenue: ' || total_rev);
+    dbms_output.put_line('Total Cost: ' || total_cost);
     dbms_output.put_line('Total Profit: ' || subtraction(total_rev, total_cost));
     if counter = 0 then
       raise nothing;
