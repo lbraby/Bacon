@@ -4,7 +4,7 @@ import React from "react";
 const Singleplayer = () => {
 	return (
 		<>
-			<h1>Singleplayer Mode</h1>
+			
 		</>
 	);
 };

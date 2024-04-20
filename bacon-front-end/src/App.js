@@ -7,8 +7,6 @@ import {
     Route,
 } from "react-router-dom";
 import Home from "./pages";
-import Singleplayer from "./pages/singleplayer";
-import Multiplayer from "./pages/multiplayer";
 
 function App() {
 	return (
@@ -18,8 +16,6 @@ function App() {
 			<Routes>
 				<Route path="/">
 					<Route index element={<Home />} />
-					<Route path="/singleplayer" element={<Singleplayer />} />
-					<Route path="/multiplayer" element={<Multiplayer />} />
 				</Route>
 			</Routes>
 		</Router>

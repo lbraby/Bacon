@@ -7,13 +7,7 @@ const Navbar = () => {
             <Nav>
                 <NavMenu>
                     <NavLink to="/" activeStyle>
-                        Home
-                    </NavLink>
-                    <NavLink to="/singleplayer" activeStyle>
-                        Daily Bacon
-                    </NavLink>
-                    <NavLink to="/multiplayer" activeStyle>
-                        Multiplayer
+                        <h1>BACON</h1>
                     </NavLink>
                 </NavMenu>
             </Nav>
