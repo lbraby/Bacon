@@ -1,0 +1,67 @@
+#main_box {
+  width: 60%;
+  margin: auto;
+  text-align: center;
+}
+
+#photos_box {
+  margin-top: 30px;
+  outline: 2px inset;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+
+#actor_photo1 {
+  grid-column: 1;
+  grid-row: 1;
+  aspect-ratio: 2/3;
+}
+
+#actor_photo2 {
+  grid-column: 2;
+  grid-row: 1;
+  aspect-ratio: 2/3;
+}
+
+#actor_name1 {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+#actor_name2 {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+#movie_input {
+   text-align: center;
+   background-color: #fdf6e8;
+   width: 70%;
+   margin-top: 30px;
+   margin-bottom: 30px;
+}
+
+#actors_scroll {
+  margin: auto;
+  padding: 5px;
+  width: 80%;
+  height: 250px;
+  overflow: auto;
+  text-align: center;
+}
+
+::-webkit-scrollbar {
+  background: #493B29;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #C37532;
+}
+
+/* 
+ orange: #C37532
+ brown: #493B29
+ cream: #FAECCC
+ */

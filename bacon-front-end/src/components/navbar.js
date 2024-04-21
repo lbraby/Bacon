@@ -4,10 +4,10 @@ import { Nav, NavLink, NavMenu } from "./navbarElements";
 const Navbar = () => {
     return (
         <>
-            <Nav>
-                <NavMenu>
+            <Nav style={{backgroundColor: "#493B29"}}>
+                <NavMenu style={{margin: "auto"}}>
                     <NavLink to="/" activeStyle>
-                        <h1>BACON</h1>
+                        <h1 style={{color: "#C37532"}}>BACON</h1>
                     </NavLink>
                 </NavMenu>
             </Nav>

@@ -1,0 +1,19 @@
+#instructions {
+  color: #493B29;
+  text-align: center;
+  width: 60%;
+  outline: 2px inset;
+  margin: auto;
+}
+
+.page_button {
+  border-radius: 4px;
+  color: #C37532;
+  background-color: #493B29;
+  margin: auto;
+  height: 25px;
+  width: 15%;
+  font-size: 16px;
+  padding-left: 5px;
+  padding-right: 5px;
+}

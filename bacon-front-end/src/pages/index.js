@@ -1,6 +1,7 @@
 // pages/index.js
  
 import React from 'react';
+import "./index.css";
 import { useNavigate } from 'react-router-dom';
 const Home = () => {
     const navigate = useNavigate()
@@ -13,12 +14,13 @@ const Home = () => {
 
     return (
     <div>
-	 <h1><br></br>This is Bacon, a game inspired by the brain teaser "six degrees of Kevin Bacon" </h1>
-	 <h1><br></br>Every day there's a new daily game! Can you beat your friends' scores? </h1>
-	 <h1><br></br>Need more Bacon competition? Challenge a friend to a head-to-head matchup! You'll be given the same starting and ending actors and compete to create the shortest chain between them</h1>
-    	 
-	 <button onClick={() => goToSPage()} className="btn">DAILY BACON</button>
-	 <button onClick={() => goToMPage()} className="btn">MULTIPLAYER</button>
+	 <div id="instructions">
+	   <h2><br></br>This is Bacon, a game inspired by the brain teaser "six degrees of Kevin Bacon" </h2>
+	   <h2><br></br>Every day there's a new daily game! Can you beat your friends' scores? </h2>
+	   <h2><br></br>Need more Bacon competition? Challenge a friend to a head-to-head matchup! You'll be given the same starting and ending actors and compete to create the shortest chain between them</h2>
+    	 </div>
+	 <div style={{textAlign: "center"}}><button class="page_button" onClick={() => goToSPage()}>DAILY BACON</button>
+	 <button class="page_button" onClick={() => goToMPage()}>MULTIPLAYER</button></div>
     </div>
   );
 };
