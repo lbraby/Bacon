@@ -194,41 +194,47 @@ def search_person(search, count):
     else:
         return jsonify({"error": "Not found"}), 404
 
+def query_person(id, cursor):
+    cursor.execute(f"SELECT * FROM person p where p.person_id = {id}")
+    p = cursor.fetchone()
+    return({
+        "person_id":p[0],
+        "name":p[1],
+        "poster_path":p[2]
+    })
+
+def get_random_person(cursor):
+    cursor.execute(f"select person_id from ( select * from person order by dbms_random.value ) where rownum <= 1")
+    row = cursor.fetchone()
+    return row[0]
+
 @app.route("/dailymode",methods=["GET"])
 def dailymode():
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
     cursor = connection.cursor()
     
-    def query_person(id):
-        cursor.execute(f"SELECT * FROM person p where p.person_id = {id}")
-        p = cursor.fetchone()
-        return({
-            "person_id":p[0],
-            "name":p[1],
-            "poster_path":p[2]
-        })
-
-    def get_random_person():
-        cursor.execute(f"select person_id from ( select * from person order by dbms_random.value ) where rownum <= 1")
-        row = cursor.fetchone()
-        return row[0]
-    
     cursor.execute(f"select * from dailymode where todays_date=trunc(sysdate)")
     row = cursor.fetchone()
-    print(row)
         
          
     if row:
-        person1 = query_person(row[1])
-        person2 = query_person(row[2])
+        person1 = query_person(row[1], cursor)
+        person2 = query_person(row[2], cursor)
     else:
-        get_random_person()
-        cursor.execute(f"insert into dailymode(person1_id, person2_id, todays_date) values({get_random_person()}, {get_random_person()}, trunc(sysdate))")
+        get_random_person(cursor)
+        try:
+            cursor.execute(f"insert into dailymode(person1_id, person2_id, todays_date) values({get_random_person(cursor)}, {get_random_person(cursor)}, trunc(sysdate))")
+            connection.commit()   
+        except cx_Oracle.DatabaseError as e:
+            connection.rollback()
+            cursor.close()
+            connection.close()
+            return jsonify({"error": "error commiting to table dailymode"}), 500
         
         cursor.execute(f"select * from dailymode where todays_date=trunc(sysdate)")
         row = cursor.fetchone()
-        person1 = query_person(row[1])
-        person2 = query_person(row[2])
+        person1 = query_person(row[1], cursor)
+        person2 = query_person(row[2], cursor)
         
     cursor.close()
     connection.close()
