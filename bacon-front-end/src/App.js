@@ -11,8 +11,7 @@ import Singleplayer from "./pages/singleplayer";
 import Multiplayer from "./pages/multiplayer";
 
 function App() {
-	document.body.style = 'background: #ffffff';
-	document.body.style = 'background: linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(250,236,204,1) 40%)';
+	document.body.style = 'background: #E2E3E0';
 	return (
 		<>
 		<Router>
