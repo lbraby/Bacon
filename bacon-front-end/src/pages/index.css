@@ -7,13 +7,11 @@
 }
 
 .page_button {
-  border-radius: 4px;
-  color: #C37532;
+  border-radius: 32px;
   background-color: #493B29;
-  margin: auto;
-  height: 25px;
-  width: 15%;
+  border-color: #493B29;
+  color: #E2E3E0;
+  height: 50px;
+  width: 10%;
   font-size: 16px;
-  padding-left: 5px;
-  padding-right: 5px;
 }
