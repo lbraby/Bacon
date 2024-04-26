@@ -19,19 +19,32 @@ def get_movie(id):
     cursor.execute(f"SELECT * FROM movie m where m.movie_id = {id}")
 
     row = cursor.fetchone()
+    if not row: return jsonify({"error": "Not found"}), 404
+
+    result = {
+        "movie_id": row[0],
+        "title": row[1],
+        "release_date": row[2],
+        "poster_path": "https://image.tmdb.org/t/p/original/" + row[3] if row[3] else "https://drive.google.com/file/d/1VxMSoCUpcnHlcjKY3kpHZYGcRhdvlgoi/view?usp=sharing"
+    }
+    
+    # get actors in movie
+    cursor.execute(f"select person_id, name from cast_and_crew natural join person where movie_id = {id} and role like 'actor%' order by id")
+    rows = cursor.fetchall()
+
+    result["actors"] = list(map(lambda x : {
+            "person_id": x[0],
+            "name": x[1]
+        }, rows))
+    
+    cursor.execute(f"select person_id, name from cast_and_crew natural join person where movie_id = {id} and role like 'director%'")
+    row = cursor.fetchone()
+    result["director"] = {"person_id": row[0], "name": row[1]} if row else None
 
     cursor.close()
     connection.close()
 
-    if row:
-        return jsonify({
-            "movie_id": row[0],
-            "title": row[1],
-            "release_date": row[2],
-            "poster_path": "https://image.tmdb.org/t/p/original/" + row[3] if row[3] else "https://drive.google.com/file/d/1VxMSoCUpcnHlcjKY3kpHZYGcRhdvlgoi/view?usp=sharing"
-        })
-    else:
-        return jsonify({"error": "Not found"}), 404
+    return jsonify(result)
 
 @app.route("/people/<int:id>/", methods=["GET"])
 def get_person(id):
