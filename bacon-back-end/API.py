@@ -318,6 +318,23 @@ def join_game(game_id):
 
     return jsonify({"status": "success"})
 
+@app.route("/multiplayer/<int:game_id>/checkready/", methods=["GET"])
+def check_ready(game_id):
+    connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
+    cursor = connection.cursor()
+
+    cursor.execute("select ready from multiplayer where game_id=:game_id", game_id=game_id)
+
+    row = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    if row:
+        return jsonify({"status": "success", "ready": row[0]})
+    else:
+        return jsonify({"error": "Not found"}), 404
+
 @app.route("/multiplayer/<int:game_id>/pulse/userhost/", methods=["PUT"])
 def userhost_pulse(game_id):
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
