@@ -142,7 +142,7 @@ const PlayMultiPlayer = () => {
 		setTimeout(() => {
 			let prevCount = count;
 			setCount(prevCount + 1);
-			if ((5 - (prevCount + 1)) === 0 ) {
+			if ((totalSeconds - (prevCount + 1)) === 0 ) {
 				alert("timer done!");
 			}
 		}, 1000);
