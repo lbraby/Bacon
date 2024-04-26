@@ -174,7 +174,7 @@ def query_person(id, cursor):
     return({
         "person_id":p[0],
         "name":p[1],
-        "poster_path":p[2]
+        "poster_path": "https://image.tmdb.org/t/p/original" + p[2] if p[2] else None
     })
 
 def get_random_person(cursor):
@@ -225,12 +225,12 @@ def dailymode():
 def new_game():
     if request.headers.get('Content-Type') != 'application/json':
         return jsonify({"error": "Content-Type not application/json"}), 404
-    
+
     try:
         userhost_name = json.loads(request.data)["userhost_name"]
     except:
         return jsonify({"error": "userhost_name not in request body"}), 404
-    
+
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
     cursor = connection.cursor()
 
@@ -246,10 +246,10 @@ def new_game():
         cursor.close()
         connection.close()
         return jsonify({"error": "error commiting to table multiplayer"}), 500
-    
+
     cursor.close()
     connection.close()
-    
+
     return jsonify({"status": "success", "game_id": game_id})
 
 @app.route("/multiplayer/joinablegames/<int:pulse_timeout_s>/", methods=["GET"])
@@ -281,12 +281,12 @@ def get_joinable_games(pulse_timeout_s):
 def join_game(game_id):
     if request.headers.get('Content-Type') != 'application/json':
         return jsonify({"error": "Content-Type not application/json"}), 404
-    
+
     try:
         otheruser_name = json.loads(request.data)["otheruser_name"]
     except:
         return jsonify({"error": "otheruser_name not in request body"}), 404
-    
+
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
     cursor = connection.cursor()
 
@@ -299,10 +299,10 @@ def join_game(game_id):
         cursor.close()
         connection.close()
         return jsonify({"error": "error commiting to table multiplayer"}), 500
-    
+
     cursor.close()
     connection.close()
-    
+
     return jsonify({"status": "success"})
 
 @app.route("/multiplayer/<int:game_id>/pulse/userhost/", methods=["PUT"])
@@ -318,10 +318,10 @@ def userhost_pulse(game_id):
         cursor.close()
         connection.close()
         return jsonify({"error": "error commiting to table multiplayer"}), 500
-    
+
     cursor.close()
     connection.close()
-    
+
     return jsonify({"status": "success"})
 
 @app.route("/multiplayer/<int:game_id>/pulse/otheruser/", methods=["PUT"])
@@ -337,10 +337,10 @@ def otheruser_pulse(game_id):
         cursor.close()
         connection.close()
         return jsonify({"error": "error commiting to table multiplayer"}), 500
-    
+
     cursor.close()
     connection.close()
-    
+
     return jsonify({"status": "success"})
 
 @app.route("/multiplayer/<int:game_id>/pulsecheck/userhost/", methods=["GET"])
@@ -349,7 +349,7 @@ def userhost_pulsecheck(game_id):
     cursor = connection.cursor()
 
     cursor.execute("select (sysdate - userhost_last_pulse) * 24 * 60 * 60 from multiplayer where game_id=:game_id", game_id=game_id)
-    
+
     row = cursor.fetchone()
 
     cursor.close()
@@ -359,14 +359,14 @@ def userhost_pulsecheck(game_id):
         return jsonify({"status": "success", "elapsed_seconds": int(row[0])})
     else:
         return jsonify({"error": "Not found"}), 404
-    
+
 @app.route("/multiplayer/<int:game_id>/pulsecheck/otheruser/", methods=["GET"])
 def otheruser_pulsecheck(game_id):
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
     cursor = connection.cursor()
 
     cursor.execute("select (sysdate - otheruser_last_pulse) * 24 * 60 * 60 from multiplayer where game_id=:game_id", game_id=game_id)
-    
+
     row = cursor.fetchone()
 
     cursor.close()
@@ -376,7 +376,7 @@ def otheruser_pulsecheck(game_id):
         return jsonify({"status": "success", "elapsed_seconds": int(row[0])})
     else:
         return jsonify({"error": "Not found"}), 404
-    
+
 @app.route("/multiplayer/<int:game_id>/selectperson/userhost/<int:person_id>/", methods=["PUT"])
 def selectperson_userhost(game_id, person_id):
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
@@ -391,10 +391,10 @@ def selectperson_userhost(game_id, person_id):
         cursor.close()
         connection.close()
         return jsonify({"error": "error commiting to table multiplayer"}), 500
-    
+
     cursor.close()
     connection.close()
-    
+
     return jsonify({"status": "success"})
 
 @app.route("/multiplayer/<int:game_id>/selectperson/otheruser/<int:person_id>/", methods=["PUT"])
@@ -411,10 +411,10 @@ def selectperson_otheruser(game_id, person_id):
         cursor.close()
         connection.close()
         return jsonify({"error": "error commiting to table multiplayer"}), 500
-    
+
     cursor.close()
     connection.close()
-    
+
     return jsonify({"status": "success"})
 
 @app.route("/multiplayer/<int:game_id>/score/userhost/<int:seconds>/<int:links>/", methods=["PUT"])
@@ -431,10 +431,10 @@ def score_userhost(game_id, seconds, links):
         cursor.close()
         connection.close()
         return jsonify({"error": "error commiting to table multiplayer"}), 500
-    
+
     cursor.close()
     connection.close()
-    
+
     return jsonify({"status": "success"})
 
 @app.route("/multiplayer/<int:game_id>/score/otheruser/<int:seconds>/<int:links>/", methods=["PUT"])
@@ -451,10 +451,10 @@ def score_otheruser(game_id, seconds, links):
         cursor.close()
         connection.close()
         return jsonify({"error": "error commiting to table multiplayer"}), 500
-    
+
     cursor.close()
     connection.close()
-    
+
     return jsonify({"status": "success"})
 
 @app.route("/multiplayer/<int:game_id>/getscores/", methods=["GET"])
