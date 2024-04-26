@@ -1,3 +1,4 @@
+drop materialized view popular_actors_mv;
 drop table cast_and_crew;
 drop table dailymode;
 drop table multiplayer;
