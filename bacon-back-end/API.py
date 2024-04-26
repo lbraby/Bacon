@@ -159,7 +159,7 @@ def search_person(search, count):
     # clean search input
     search = search.lower().replace('_', ' ')
 
-    cursor.execute(f"select * from person where lower(name) like '{search}%' and rownum <= {count}")
+    cursor.execute(f"select * from popular_actors_mv where lower(name) like '{search}%' and rownum <= {count}")
 
     rows = cursor.fetchall()
 
@@ -191,7 +191,7 @@ def query_person(id, cursor):
     })
 
 def get_random_person(cursor):
-    cursor.execute(f"select person_id from ( select * from person order by dbms_random.value ) where rownum <= 1")
+    cursor.execute(f"select person_id from ( select * from popular_actors_mv order by dbms_random.value ) where rownum <= 1")
     row = cursor.fetchone()
     return row[0]
 
