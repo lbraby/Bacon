@@ -27,8 +27,8 @@ def get_movie(id):
         return jsonify({
             "movie_id": row[0],
             "title": row[1],
-            "release_date":row[2],
-            "poster_path":row[3]
+            "release_date": row[2],
+            "poster_path": "https://image.tmdb.org/t/p/original/" + row[3] if row[3] else "https://drive.google.com/file/d/1VxMSoCUpcnHlcjKY3kpHZYGcRhdvlgoi/view?usp=sharing"
         })
     else:
         return jsonify({"error": "Not found"}), 404
@@ -49,8 +49,8 @@ def get_person(id):
         return jsonify({
             "person_id": row[0],
             "name": row[1],
-            "image_path":row[2],
-            "known_for_department":row[3][:-1]
+            "image_path": "https://image.tmdb.org/t/p/original/" + row[2] if row[2] else "https://drive.google.com/file/d/1VxMSoCUpcnHlcjKY3kpHZYGcRhdvlgoi/view?usp=sharing",
+            "known_for_department": row[3][:-1]
         })
     else:
         return jsonify({"error": "Not found"}), 404
@@ -129,7 +129,7 @@ def search_movie(search, count):
             "movie_id": x[0],
             "title":x[1],
             "release_date":x[2],
-            "poster_path":x[3]
+            "poster_path": "https://image.tmdb.org/t/p/original/" + x[3] if x[3] else "https://drive.google.com/file/d/1VxMSoCUpcnHlcjKY3kpHZYGcRhdvlgoi/view?usp=sharing"
         }, rows))
         return jsonify({
             "result":"success",
@@ -158,8 +158,8 @@ def search_person(search, count):
         rows = list(map(lambda x : {
             "person_id": x[0],
             "name":x[1],
-            "poster_path":x[2],
-            "known_for_department":x[3]
+            "image_path": "https://image.tmdb.org/t/p/original/" + x[2] if x[2] else "https://drive.google.com/file/d/1VxMSoCUpcnHlcjKY3kpHZYGcRhdvlgoi/view?usp=sharing",
+            "known_for_department":x[3][:-1]
         }, rows))
         return jsonify({
             "result":"success",
@@ -174,7 +174,7 @@ def query_person(id, cursor):
     return({
         "person_id":p[0],
         "name":p[1],
-        "poster_path": "https://image.tmdb.org/t/p/original" + p[2] if p[2] else None
+        "poster_path": "https://image.tmdb.org/t/p/original" + p[2] if p[2] else "https://drive.google.com/file/d/1VxMSoCUpcnHlcjKY3kpHZYGcRhdvlgoi/view?usp=sharing"
     })
 
 def get_random_person(cursor):
@@ -182,7 +182,7 @@ def get_random_person(cursor):
     row = cursor.fetchone()
     return row[0]
 
-@app.route("/dailymode",methods=["GET"])
+@app.route("/dailymode", methods=["GET"])
 def dailymode():
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
     cursor = connection.cursor()
