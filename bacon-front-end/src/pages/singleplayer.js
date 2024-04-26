@@ -9,12 +9,12 @@ const Singleplayer = () => {
 	const [selectedMovie, setSelectedMovie] = useState({}); // essentially current movie
 	const [boxDisplay, setBoxDisplay] = useState([]); // Info to be displayed
 
-	// const appendToBoxDisplay = (thing)=> {
-	// 	// Appends to the list to be displayed on the UI
-	// 	let prevBoxDisplay = [...boxDisplay];
-	// 	prevBoxDisplay.push(thing);
-	// 	setBoxDisplay(prevBoxDisplay);
-	// }
+	const appendToBoxDisplay = (thing)=> {
+		// Appends to the list to be displayed on the UI
+		let prevBoxDisplay = [...boxDisplay];
+		prevBoxDisplay.push(thing);
+		setBoxDisplay(prevBoxDisplay);
+	}
 
 	const movie2actor = (movieid, actorid) => {
 		// Calls movieperson API to compare an actor and movie
@@ -75,6 +75,7 @@ const Singleplayer = () => {
 						}
 					});
 					setSelectedMovie(movie);
+					appendToBoxDisplay(movie);
 				} else {
 					alert("he not in that, try again");
 				}
@@ -92,6 +93,7 @@ const Singleplayer = () => {
 						}
 					});
 					setSelectedMovie(movie);
+					appendToBoxDisplay(movie);
 				} else {
 					alert("he not in that, try again");
 				}
@@ -169,9 +171,8 @@ const Singleplayer = () => {
 				</div>
 			</div>
 			<div id="actors_scroll">
-				{selectedMovie.title}
 				{boxDisplay.map(function(d, idx){
-        				return (<li key={idx}>{d.name}</li>);
+        			return (<li key={idx}>{d.title}</li>);
 				})}
 			</div>
 		</div>
