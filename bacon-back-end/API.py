@@ -27,7 +27,7 @@ def get_movie(id):
         "release_date": row[2],
         "poster_path": "https://image.tmdb.org/t/p/original/" + row[3] if row[3] else "https://drive.google.com/file/d/1VxMSoCUpcnHlcjKY3kpHZYGcRhdvlgoi/view?usp=sharing"
     }
-    
+
     # get actors in movie
     cursor.execute(f"select person_id, name from cast_and_crew natural join person where movie_id = {id} and role like 'actor%' order by id")
     rows = cursor.fetchall()
@@ -36,7 +36,7 @@ def get_movie(id):
             "person_id": x[0],
             "name": x[1]
         }, rows))
-    
+
     cursor.execute(f"select person_id, name from cast_and_crew natural join person where movie_id = {id} and role like 'director%'")
     row = cursor.fetchone()
     result["director"] = {"person_id": row[0], "name": row[1]} if row else None
@@ -446,6 +446,28 @@ def selectperson_otheruser(game_id, person_id):
     connection.close()
 
     return jsonify({"status": "success"})
+	
+@app.route("/multiplayer/<int:game_id>/getselectedpeople/", methods=["GET"])
+def getselectedpeople(game_id):
+    connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
+    cursor = connection.cursor()
+
+    cursor.execute(f"select userhost_person_id, otheruser_person_id \
+                   from multiplayer where game_id=:game_id", game_id=game_id)
+
+    row = cursor.fetchone()
+    cursor.close()
+    connection.close()
+
+    if row:
+        return jsonify({
+            "userhost_person_id": row[0],
+            "otheruser_person_id": row[1],
+            "default1_person_id": 1901628, # Kevin Bacon
+            "default2_person_id": 518 # Danny DeVito
+        })
+    else:
+        return jsonify({"error": "Not found"}), 404
 
 @app.route("/multiplayer/<int:game_id>/score/userhost/<int:seconds>/<int:links>/", methods=["PUT"])
 def score_userhost(game_id, seconds, links):
