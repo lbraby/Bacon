@@ -1,6 +1,7 @@
 // pages/singleplayer.js
 import React, {useEffect, useState}from "react";
-import "./singleplayer.css"
+import "./singleplayer.css";
+import logo from "./Bacon.png";
 const Singleplayer = () => {
 	const [firstTimeDone, setFirstTimeDone] = useState(false); //Flag for first time through
 	const [dailyActors, setDailyActors] = useState({}); // 2 daily actors
@@ -165,7 +166,7 @@ const Singleplayer = () => {
 					return(resp.json());
 				}
 			})
-			.then(data => {setDailyActors(data)})
+			.then(data => {setDailyActors(data); console.log(data);})
 			.catch(err => {
 				console.error(err);
 			})
@@ -187,6 +188,7 @@ const Singleplayer = () => {
 						</div>
 						<div>
 							<h1 id="scoreboard">{boxDisplay.length}</h1>
+							<img id="bacon" src={logo} alt="score"/>
 						</div>
 						<div> 
 							<img id="actor_photo2" alt="actor_photo2" src={`${dailyActors.person2.poster_path}`}/>
