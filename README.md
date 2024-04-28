@@ -263,6 +263,17 @@ Steps for setting up movie db
     ```json
     {"status": "success"}
     ```
+#### Get selected starting persons: GET `/multiplayer/<int:game_id>/getselectedpeople/`
+- Get person_ids of actors selected for game identified by `game_id` along with the default person_ids if either is null (default1 = Kevin Bacon, default2 = Danny DeVito)
+- Content example:
+    ```json
+    {
+        "default1_person_id": 1901628,
+        "default2_person_id": 518,
+        "otheruser_person_id": 100,
+        "userhost_person_id": 110
+    }
+    ```
 #### Submit score for userhost: PUT `/multiplayer/<int:game_id>/score/userhost/<int:seconds>/<int:links>/`
 - Set `userhost_time_seconds` and `userhost_link_count` for game identified by `game_id`
 - Content example:
