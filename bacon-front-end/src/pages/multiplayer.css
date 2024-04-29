@@ -2,6 +2,26 @@ body {
   font-family: Georgia;
 }
 
+.host_container {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  margin-top: 20px;  
+}
+
+.host_container input {
+  text-align: center;
+  background-color: #fdf6e8;
+  width: 70%;
+  margin: auto;
+  margin-bottom: 5px;
+}
+.host_container button {
+  width: 100px;
+  margin: auto;
+}
 .game_box {
   width: full;
   border: 1px solid black;
@@ -78,11 +98,11 @@ body {
 }
 
 #movie_input {
-   text-align: center;
-   background-color: #fdf6e8;
-   width: 70%;
-   margin-top: 30px;
-   margin-bottom: 30px;
+  text-align: center;
+  background-color: #fdf6e8;
+  width: 70%;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 #games_scroll {
