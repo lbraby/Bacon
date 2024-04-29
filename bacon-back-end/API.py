@@ -511,6 +511,117 @@ def get_scores(game_id):
     else:
         return jsonify({"error": "Not found"}), 404
 
+@app.route("/movies/search/<string:search>/<int:count>", methods=["GET"])
+def search_movie(search, count):
+    connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
+    cursor = connection.cursor()
+
+    # clean search input
+    search = search.lower().replace('_', ' ')
+
+    cursor.execute(f"select * from movie where lower(title) like '{search}%' and rownum <= {count}")
+
+    rows = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    if rows:
+        # convert rows from list of tuples to list of objects
+        rows = list(map(lambda x : {
+            "movie_id": x[0],
+            "title":x[1],
+            "release_date":x[2],
+            "poster_path":x[3]  
+        }, rows))
+        return jsonify({
+            "result":"success",
+            "data": rows
+        })
+    else:
+        return jsonify({"error": "Not found"}), 404
+
+@app.route("/people/search/<string:search>/<int:count>", methods=["GET"])
+def search_person(search, count):
+    connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
+    cursor = connection.cursor()
+
+    # clean search input
+    search = search.lower().replace('_', ' ')
+
+    cursor.execute(f"select * from person where lower(name) like '{search}%' and rownum <= {count}")
+
+    rows = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    if rows:
+        # convert rows from list of tuples to list of objects
+        rows = list(map(lambda x : {
+            "person_id": x[0],
+            "name":x[1],
+            "poster_path":x[2],
+            "known_for_department":x[3]  
+        }, rows))
+        return jsonify({
+            "result":"success",
+            "data": rows
+        })
+    else:
+        return jsonify({"error": "Not found"}), 404
+
+def query_person(id, cursor):
+    cursor.execute(f"SELECT * FROM person p where p.person_id = {id}")
+    p = cursor.fetchone()
+    return({
+        "person_id":p[0],
+        "name":p[1],
+        "poster_path":p[2]
+    })
+
+def get_random_person(cursor):
+    cursor.execute(f"select person_id from ( select * from person order by dbms_random.value ) where rownum <= 1")
+    row = cursor.fetchone()
+    return row[0]
+
+@app.route("/dailymode",methods=["GET"])
+def dailymode():
+    connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
+    cursor = connection.cursor()
+    
+    cursor.execute(f"select * from dailymode where todays_date=trunc(sysdate)")
+    row = cursor.fetchone()
+        
+         
+    if row:
+        person1 = query_person(row[1], cursor)
+        person2 = query_person(row[2], cursor)
+    else:
+        get_random_person(cursor)
+        try:
+            cursor.execute(f"insert into dailymode(person1_id, person2_id, todays_date) values({get_random_person(cursor)}, {get_random_person(cursor)}, trunc(sysdate))")
+            connection.commit()   
+        except cx_Oracle.DatabaseError as e:
+            connection.rollback()
+            cursor.close()
+            connection.close()
+            return jsonify({"error": "error commiting to table dailymode"}), 500
+        
+        cursor.execute(f"select * from dailymode where todays_date=trunc(sysdate)")
+        row = cursor.fetchone()
+        person1 = query_person(row[1], cursor)
+        person2 = query_person(row[2], cursor)
+        
+    cursor.close()
+    connection.close()
+    
+    return jsonify({
+        "result":"success",
+        "person1":person1,
+        "person2":person2
+    })
+    
 if __name__ == "__main__":
     dsn = cx_Oracle.makedsn('localhost', '1521')
     username = 'guest'
