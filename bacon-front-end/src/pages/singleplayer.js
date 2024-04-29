@@ -1,6 +1,8 @@
 // pages/singleplayer.js
-import React, {useEffect, useState}from "react";
+import React, {useEffect, useState }from "react";
+import { useNavigate } from "react-router-dom";
 import "./singleplayer.css";
+import Modal from "./modal";
 import logo from "./Bacon.png";
 const Singleplayer = () => {
 	const [firstTimeDone, setFirstTimeDone] = useState(false); //Flag for first time through
@@ -11,6 +13,15 @@ const Singleplayer = () => {
 	const [boxDisplay, setBoxDisplay] = useState([]); // Info to be displayed
 	const [actDisplay, setActDisplay] = useState([]); // Info to be displayed
 	const [gameOver, setGameOver] = useState(false);
+	const [status, setStatus] = useState(0);
+	const [modalIsOpen, setModalIsOpen] = useState(true);
+	const [alertText, setAlertText] = useState("");
+	const navigate = useNavigate();
+
+	const closeModal = () => {
+		setModalIsOpen(false);
+		navigate("/");
+	};
 
 	const appendToBoxDisplay = (thing)=> {
 		// Appends to the list to be displayed on the UI
@@ -98,7 +109,6 @@ const Singleplayer = () => {
 			// if this is not the first time
 			movie2movie(movie.movie_id, selectedMovie.movie_id).then((result) => {
 				if (result.length !== 0) {
-					console.log(result.list[0][0]);
 					getActor(result.list[0][0]).then((actor) => {
 						appendToActDisplay(actor.name);
 					});
@@ -106,15 +116,17 @@ const Singleplayer = () => {
 					movie2actor(movie.movie_id, dailyActors.person2.person_id).then((result) => {
 						if (result) {
 							setGameOver(true);
-							alert("he in both movies, game over");
+							setStatus(3);
 						} else {
-							alert("1st actor in movie, 2nd actor not tho, keep going!");
+							setStatus(2);
+							setAlertText(`${dailyActors.person2.name} was not in ${movie.title}, keep going!`);
 						}
 					});
 					setSelectedMovie(movie);
 					appendToBoxDisplay(movie);
 				} else {
-					alert("he not in that, try again");
+					setStatus(1);
+					setAlertText(`${selectedMovie.title} and ${movie.title} do not share an actor/director, try again!`)
 				}
 			});
 		} else {
@@ -126,15 +138,17 @@ const Singleplayer = () => {
 					movie2actor(movie.movie_id, dailyActors.person2.person_id).then((result) => {
 						if (result) {
 							setGameOver(true);
-							alert("he in both movies, game over");
+							setStatus(3);
 						} else {
-							alert("1st actor in the movie, 2nd actor not, keep going!");
+							setStatus(2);
+							setAlertText(`${dailyActors.person2.name} was not in ${movie.title}, keep going!`);
 							setFirstTimeDone(true);
 						}
 					});
 					setSelectedMovie(movie);
 				} else {
-					alert("he not in that, try again");
+					setStatus(1);
+					setAlertText(`${dailyActors.person1.name} was not in ${movie.title}, try again!`)
 				}
 			});
 		}
@@ -175,6 +189,12 @@ const Singleplayer = () => {
 
 	return (
 		<div id="main_box">
+			{(status === 3) &&
+				<Modal isOpen={modalIsOpen} onClose={closeModal}>
+					<h3>You win!</h3>
+					<p>{`${dailyActors.person1.name} and ${dailyActors.person2.name} are both in ${selectedMovie.title}`}</p>
+				</Modal>
+			}
 			<div>
 				{(Object.keys(dailyActors).length === 0)
 					?
@@ -198,6 +218,12 @@ const Singleplayer = () => {
 					</div>
 				}
 			</div>
+			{((status === 1) || (status === 2))
+				&&
+				<h3 style={{marginBottom: "0px"}}>
+					{alertText}
+				</h3>
+			}
 			<div>
 				<input onChange={(e)=>setSearchVal(e.target.value)} type="text" id="movie_input" placeholder="movie"/>
 				<div style={{position: "absolute"}}>
@@ -213,18 +239,22 @@ const Singleplayer = () => {
 			</div>
 			<div id="actors_scroll">
 				{console.log(actDisplay)}
-				{boxDisplay.map(function(d, idx){
-					if (Object.keys(d).length !== 0) {
-        					return (<div key={idx}>
-								<div class="actor_item">
-									<p>{actDisplay[idx]}</p>
+				{boxDisplay.map((d, idx) => {
+					return (
+						<div>
+							{(Object.keys(d).length !== 0) &&
+								<div key={idx}>
+									<div class="actor_item">
+										<p>{actDisplay[idx]}</p>
+									</div>
+									<div class="movie_item">
+										<img class="movie_poster" src={`${d.poster_path}`} alt="movie_poster"/>
+										<div class="movie_title"><p>{d.title} {d.release_date.split(" ")[3]}</p></div>
+									</div>
 								</div>
-								<div class="movie_item">
-									<img class="movie_poster" src={`${d.poster_path}`} alt="movie_poster"/>
-									<div class="movie_title"><p>{d.title} {d.release_date.split(" ")[3]}</p></div>
-								</div>
-							</div>);
-					}
+							}
+						</div>
+					);
 				})}
 				{gameOver &&
 					<div class="actor_item"><p>{dailyActors.person2.name}</p></div>
