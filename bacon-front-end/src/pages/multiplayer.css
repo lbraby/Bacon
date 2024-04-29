@@ -1,0 +1,23 @@
+#new_game_button {
+  border-radius: 4px;
+  margin: auto;
+  height: 25px;
+  width: 15%;
+  font-size: 16px;
+}
+
+#active_games {
+  outline: 2px inset;
+  width: 60%;
+  overflow: auto;
+  text-align: center;
+  height: 250px;
+}
+
+::-webkit-scrollbar {
+  background: #493B29;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #C37532;
+}

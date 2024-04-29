@@ -1,27 +1,16 @@
-// pages/singleplayer.js
-import React, {useEffect, useState }from "react";
-import { useNavigate } from "react-router-dom";
-import "./singleplayer.css";
-import Modal from "./modal";
-import logo from "./Bacon.png";
-const Singleplayer = () => {
+// pages/playmultiplayer.js
+import React, {useEffect, useState}from "react";
+import "./playmultiplayer.css"
+import Timer from "./timer";
+const PlayMultiPlayer = () => {
 	const [firstTimeDone, setFirstTimeDone] = useState(false); //Flag for first time through
 	const [dailyActors, setDailyActors] = useState({}); // 2 daily actors
 	const [searchVal, setSearchVal] = useState(""); // search bar value
 	const [searchData, setSearchData] = useState([]); // search bar stuff
 	const [selectedMovie, setSelectedMovie] = useState({}); // essentially current movie
 	const [boxDisplay, setBoxDisplay] = useState([]); // Info to be displayed
-	const [actDisplay, setActDisplay] = useState([]); // Info to be displayed
-	const [gameOver, setGameOver] = useState(false);
-	const [status, setStatus] = useState(0);
-	const [modalIsOpen, setModalIsOpen] = useState(true);
-	const [alertText, setAlertText] = useState("");
-	const navigate = useNavigate();
-
-	const closeModal = () => {
-		setModalIsOpen(false);
-		navigate("/");
-	};
+	const [count, setCount] = useState(0);
+	const totalSeconds = 150;
 
 	const appendToBoxDisplay = (thing)=> {
 		// Appends to the list to be displayed on the UI
@@ -30,13 +19,6 @@ const Singleplayer = () => {
 		setBoxDisplay(prevBoxDisplay);
 	}
 
-	const appendToActDisplay = (thing)=> {
-		// Appends to the actor list to be displayed on the UI
-		let prevActDisplay = [...actDisplay];
-		prevActDisplay.push(thing);
-		setActDisplay(prevActDisplay);
-	}
-	
 	const movie2actor = (movieid, actorid) => {
 		// Calls movieperson API to compare an actor and movie
 		return new Promise((resolve, reject) => {
@@ -72,83 +54,51 @@ const Singleplayer = () => {
 			})
 			.then(data => {
 				if (data.result === "success") {
-					resolve(data);
+					resolve(1);
 				} else {
-					resolve([]);
+					resolve(0);
 				}
 			})
 			.catch(err => { console.error(err); });
 		});
 	}
-	
-	const getActor = (actor_id) => {
-		// Gets actor from API
-		return new Promise((resolve, reject) => {
-			fetch(`${process.env.REACT_APP_API_URL}/people/${actor_id}`)
-			.then((resp) => {
-				if(!resp.ok) {
-					reject(new Error ("404"));
-				} else {
-					return(resp.json());
-				}
-			})
-			.then(data => {
-				if (data) {
-					resolve(data);
-				} else {
-					resolve([]);
-				}
-			})
-			.catch(err => {console.error(err);});
-		});
-	}
+
 	
 	const movieSelected = (movie) => {
 		setSearchVal("");
 		if (firstTimeDone) {
 			// if this is not the first time
 			movie2movie(movie.movie_id, selectedMovie.movie_id).then((result) => {
-				if (result.length !== 0) {
-					getActor(result.list[0][0]).then((actor) => {
-						appendToActDisplay(actor.name);
-					});
-					appendToBoxDisplay(movie);
+				if (result) {
 					movie2actor(movie.movie_id, dailyActors.person2.person_id).then((result) => {
 						if (result) {
-							setGameOver(true);
-							setStatus(3);
+							alert("he in both movies, game over");
 						} else {
-							setStatus(2);
-							setAlertText(`${dailyActors.person2.name} was not in ${movie.title}, keep going!`);
+							alert("1st actor in movie, 2nd actor not tho, keep going!");
 						}
 					});
 					setSelectedMovie(movie);
 					appendToBoxDisplay(movie);
 				} else {
-					setStatus(1);
-					setAlertText(`${selectedMovie.title} and ${movie.title} do not share an actor/director, try again!`)
+					alert("he not in that, try again");
 				}
 			});
 		} else {
 			// if this is the first time
 			movie2actor(movie.movie_id, dailyActors.person1.person_id).then((result) => {
 				if (result) {
-					appendToBoxDisplay(movie);
-					appendToActDisplay(dailyActors.person1.name);
 					movie2actor(movie.movie_id, dailyActors.person2.person_id).then((result) => {
 						if (result) {
-							setGameOver(true);
-							setStatus(3);
+							alert("he in both movies, game over");
 						} else {
-							setStatus(2);
-							setAlertText(`${dailyActors.person2.name} was not in ${movie.title}, keep going!`);
+							alert("1st actor in the movie, 2nd actor not, keep going!");
 							setFirstTimeDone(true);
 						}
 					});
 					setSelectedMovie(movie);
+					appendToBoxDisplay(movie);
 				} else {
-					setStatus(1);
-					setAlertText(`${dailyActors.person1.name} was not in ${movie.title}, try again!`)
+					alert("he not in that, try again");
 				}
 			});
 		}
@@ -187,14 +137,19 @@ const Singleplayer = () => {
 			})
 	},[]);
 
+	useEffect(() => {
+		// update count every second
+		setTimeout(() => {
+			let prevCount = count;
+			setCount(prevCount + 1);
+			if ((totalSeconds - (prevCount + 1)) === 0 ) {
+				alert("timer done!");
+			}
+		}, 1000);
+	}, [count]);
+
 	return (
 		<div id="main_box">
-			{(status === 3) &&
-				<Modal isOpen={modalIsOpen} onClose={closeModal}>
-					<h3>You win!</h3>
-					<p>{`${dailyActors.person1.name} and ${dailyActors.person2.name} are both in ${selectedMovie.title}`}</p>
-				</Modal>
-			}
 			<div>
 				{(Object.keys(dailyActors).length === 0)
 					?
@@ -204,26 +159,19 @@ const Singleplayer = () => {
 					:
 					<div id="photos_box">
 						<div>
-							<img id="actor_photo1" alt="actor_photo1" src={`${dailyActors.person1.poster_path}`}/>
-							<div id="actor_name1"><p>{dailyActors.person1.name}</p></div>
+							<img id="actor_photo1" alt="actor_photo1"/>
+							<div id="actor_name1">
+								<p>{dailyActors.person1.name}</p>
+							</div>
 						</div>
 						<div>
-							<h1 id="scoreboard">{boxDisplay.length}</h1>
-							<img id="bacon" src={logo} alt="score"/>
-						</div>
-						<div> 
-							<img id="actor_photo2" alt="actor_photo2" src={`${dailyActors.person2.poster_path}`}/>
+							<img id="actor_photo2" alt="actor_photo1"/>
 							<div id="actor_name2"><p>{dailyActors.person2.name}</p></div>
 						</div>
 					</div>
 				}
 			</div>
-			{((status === 1) || (status === 2))
-				&&
-				<h3 style={{marginBottom: "0px"}}>
-					{alertText}
-				</h3>
-			}
+			<Timer totalSeconds={totalSeconds} newSeconds={count} />
 			<div>
 				<input onChange={(e)=>setSearchVal(e.target.value)} type="text" id="movie_input" placeholder="movie"/>
 				<div style={{position: "absolute"}}>
@@ -231,36 +179,18 @@ const Singleplayer = () => {
 				<div style={{backgroundColor: '#E2E3E0', zIndex: 1, position: "relative"}}>
 					{searchData.map((item, index) => {		
 						return(
-							<p onClick={() => {movieSelected(item)}} key={index}>{item.title} {item.release_date.split(" ")[3]}</p>
+							<p onClick={() => {movieSelected(item)}} key={index}>{item.title}</p>
 						);
 					})}
 				</div>}
 				</div>
 			</div>
 			<div id="actors_scroll">
-				{console.log(actDisplay)}
-				{boxDisplay.map((d, idx) => {
-					return (
-						<div>
-							{(Object.keys(d).length !== 0) &&
-								<div key={idx}>
-									<div class="actor_item">
-										<p>{actDisplay[idx]}</p>
-									</div>
-									<div class="movie_item">
-										<img class="movie_poster" src={`${d.poster_path}`} alt="movie_poster"/>
-										<div class="movie_title"><p>{d.title} {d.release_date.split(" ")[3]}</p></div>
-									</div>
-								</div>
-							}
-						</div>
-					);
+				{boxDisplay.map(function(d, idx){
+        			return (<li key={idx}>{d.title}</li>);
 				})}
-				{gameOver &&
-					<div class="actor_item"><p>{dailyActors.person2.name}</p></div>
-				}
 			</div>
 		</div>
 	);
 };
-export default Singleplayer;
+export default PlayMultiPlayer;
