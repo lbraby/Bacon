@@ -1,17 +1,133 @@
-#new_game_button {
-  border-radius: 4px;
-  margin: auto;
-  height: 25px;
-  width: 15%;
-  font-size: 16px;
+body {
+  font-family: Georgia;
 }
 
-#active_games {
-  outline: 2px inset;
-  width: 60%;
+.game_box {
+  width: full;
+  border: 1px solid black;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  padding-right: 5%;
+  padding-left: 5%;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.game_box button {
+  height: 50%;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+#main_box {
+  width: 50%;
+  margin: auto;
+  text-align: center;
+}
+
+#photos_box {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 40% 20% 40%;
+  gap: 10px;
+}
+
+#actor_photo1 {
+  margin-top: 10px;
+  grid-column: 1;
+  grid-row: 1;
+  height: 200px;
+}
+
+#actor_photo2 {
+  margin-top: 10px;
+  grid-column: 3;
+  grid-row: 1;
+  height: 200px;
+}
+
+#actor_name1 {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+#actor_name2 {
+  grid-column: 3;
+  grid-row: 2;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+#scoreboard {
+  z-index: 1; 
+  grid-column: 2;
+  grid-row: 1 / 2;
+  font-size: 3em;
+  font-weight: bold;
+  bottom: 0;
+}
+
+#bacon {
+  grid-row: 1 / 2;
+  grid-column: 2;
+  height: 150px;
+  transform: rotate(40deg);
+}
+
+#movie_input {
+   text-align: center;
+   background-color: #fdf6e8;
+   width: 70%;
+   margin-top: 30px;
+   margin-bottom: 30px;
+}
+
+#games_scroll {
+  margin: auto;
+  padding: 5px;
+  width: 70%;
+  height: 300px;
   overflow: auto;
   text-align: center;
-  height: 250px;
+  border: inset 2px black;
+}
+
+.actor_item {
+  margin: auto;
+  border: 2px black inset; 
+  width: 45%;
+  font-size: 16;
+  text-align: center;
+  height: auto;
+  border-radius: 16px;
+  background-color: #FEB896;
+}
+
+.movie_item {
+  width: 65%;
+  margin: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: 30% 70%;
+  border: 2px black inset;
+}
+
+.movie_poster {
+  grid-column: 1;
+  height: 100px;
+}
+
+.movie_title {
+  text-align: center;
+  vertical-align: center;
+  grid-column: 2;
+  font-size: 20;
+  overflow: auto;
+  padding: 5px;
 }
 
 ::-webkit-scrollbar {
