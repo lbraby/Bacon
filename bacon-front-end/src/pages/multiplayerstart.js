@@ -1,4 +1,5 @@
 import React, {useEffect, useState }from "react";
+import { apiWrapper } from "../services/apiwrapper";
 import Modal from "./modal";
 import "./multiplayer.css";
 
@@ -16,86 +17,49 @@ const MultiplayerStart = ({setScreenCount, setUserType, setGameId}) => {
 	};
 
 	const submitHostName = () => {
-		return new Promise((resolve, reject) => {
-			const options = {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					userhost_name: userName
-				})
-			};
-			fetch(`${process.env.REACT_APP_API_URL}/multiplayer/newgame/`, options)
-			.then((resp) => {
-				if(!resp.ok) {
-					reject(new Error ("404"));
-				} else {
-					return(resp.json());
-				}
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				userhost_name: userName
 			})
-			.then(data => 
-			{
-				if (data.status === "success") {
-					setUserType("host");
-					setGameId(data.game_id);
-					setShowModal(0);
-					setScreenCount(1);
-					resolve(1);
-				} else {
-					resolve(0);
-				}
-			})
-			.catch(() => alert("error submitting username!"))
+		};
+		apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/newgame/`, options)
+		.then(data => {
+			setUserType("host");
+			setGameId(data.game_id);
+			setShowModal(0);
+			setScreenCount(1);
 		})
+		.catch((err) => alert("error submitting username " + err))
 	};
 
 	const joinGame = () => {
-		return new Promise((resolve, reject) => {
-			const options = {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					otheruser_name: userName
-				})
-			};
-			fetch(`${process.env.REACT_APP_API_URL}/multiplayer/${tempGameId}/joingame/`, options)
-			.then((resp) => {
-				if(!resp.ok) {
-					reject(new Error ("404"));
-				} else {
-					return(resp.json());
-				}
+		const options = {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				otheruser_name: userName
 			})
-			.then(data => 
-			{
-				if (data.status === "success") {
-					setUserType("guest");
-					setGameId(tempGameId);
-					setShowModal(0);
-					setScreenCount(2);
-					resolve(1);
-				} else {
-					resolve(0);
-				}
-			})
-			.catch(() => alert("error submitting username!"))
+		};
+		apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${tempGameId}/joingame/`, options)
+		.then(data => {
+			setUserType("guest");
+			setGameId(tempGameId);
+			setShowModal(0);
+			setScreenCount(2);
 		})
+		.catch((err) => alert("error submitting username " + err))
 	};
 	
 
 	useEffect(() => {
 		// TODO: Change this to something realistic
-		fetch(`${process.env.REACT_APP_API_URL}/multiplayer/joinablegames/1000000/`)
-			.then((resp) => {
-				if(!resp.ok) {
-					throw new Error ("404")
-				} else {
-					return(resp.json());
-				}
-			})
+		apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/joinablegames/1000000/`, {})
 			.then(data => {
 				setJoinableGames(data.data);
 				setFilteredGames(data.data);
