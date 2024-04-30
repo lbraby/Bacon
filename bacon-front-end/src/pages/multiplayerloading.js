@@ -1,8 +1,8 @@
 import React, {useEffect, useState }from "react";
-import { useLocation } from "react-router-dom";
+import { apiWrapper } from "../services/apiwrapper";
 import "./multiplayer.css";
 
-const MultiplayerLoading = ({game_id, setScreenCount}) => {
+const MultiplayerLoading = ({gameId, setScreenCount}) => {
 	const [count, setCount] = useState(0);
 	useEffect(() => {
 		// update count every second
@@ -10,10 +10,17 @@ const MultiplayerLoading = ({game_id, setScreenCount}) => {
 			let prevCount = count;
 			setCount(prevCount + 1);
 			new Promise((resolve, reject) => {
-
+				apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/checkready/`)
+				.then(data => {
+					if (data.ready) {
+						setScreenCount(2);
+					}
+				})
+				.catch(err => console.error("error checking status " + err));
 			});
 		}, 1000);
-	}, [count]);
+	}, [count, gameId, setScreenCount]);
+	
 	return (
 		<div id="main_box">
 			<div id="games_scroll">

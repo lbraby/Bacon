@@ -3,7 +3,7 @@ import { apiWrapper } from "../services/apiwrapper";
 import Modal from "./modal";
 import "./multiplayer.css";
 
-const MultiplayerStart = ({setScreenCount, setUserType, setGameId}) => {
+const MultiplayerStart = ({setScreenCount, setGameId}) => {
 	const [searchVal, setSearchVal] = useState("");
 	const [joinableGames, setJoinableGames] = useState([]);
 	const [filteredGames, setFilteredGames] = useState([]);
@@ -28,7 +28,6 @@ const MultiplayerStart = ({setScreenCount, setUserType, setGameId}) => {
 		};
 		apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/newgame/`, options)
 		.then(data => {
-			setUserType("host");
 			setGameId(data.game_id);
 			setShowModal(0);
 			setScreenCount(1);
@@ -48,7 +47,6 @@ const MultiplayerStart = ({setScreenCount, setUserType, setGameId}) => {
 		};
 		apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${tempGameId}/joingame/`, options)
 		.then(data => {
-			setUserType("guest");
 			setGameId(tempGameId);
 			setShowModal(0);
 			setScreenCount(2);
@@ -85,7 +83,7 @@ const MultiplayerStart = ({setScreenCount, setUserType, setGameId}) => {
 			});
 			setFilteredGames(newGames.concat(newGamesId));
 		}
-	}, [searchVal]);
+	}, [searchVal, joinableGames]);
 
 	return (
 		<div id="main_box">

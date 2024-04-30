@@ -6,14 +6,12 @@ import "./multiplayer.css";
 
 const Multiplayer = () => {
 	const [screenCount, setScreenCount] = useState(0);
-	const [userType, setUserType] = useState("");
 	const [gameId, setGameId] = useState(0);
 	return(
 		<div>
 			{(screenCount === 0) &&
 				<MultiplayerStart 
 					setScreenCount={setScreenCount}
-					setUserType={setUserType}
 					setGameId={setGameId}
 				/>
 			}

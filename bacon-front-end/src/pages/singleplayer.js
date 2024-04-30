@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./singleplayer.css";
 import Modal from "./modal";
 import logo from "./Bacon.png";
+
 const Singleplayer = () => {
 	const [firstTimeDone, setFirstTimeDone] = useState(false); //Flag for first time through
 	const [dailyActors, setDailyActors] = useState({}); // 2 daily actors
@@ -248,7 +249,6 @@ const Singleplayer = () => {
 				</div>
 			</div>
 			<div id="actors_scroll">
-				{console.log(actDisplay)}
 				{boxDisplay.map((d, idx) => {
 					return (
 						<div>
