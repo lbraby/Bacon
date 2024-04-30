@@ -2,7 +2,7 @@
 import React, {useEffect, useState}from "react";
 import "./playmultiplayer.css"
 import Timer from "./timer";
-const PlayMultiPlayer = () => {
+const MultiplayerPlay = () => {
 	const [firstTimeDone, setFirstTimeDone] = useState(false); //Flag for first time through
 	const [dailyActors, setDailyActors] = useState({}); // 2 daily actors
 	const [searchVal, setSearchVal] = useState(""); // search bar value
@@ -193,4 +193,4 @@ const PlayMultiPlayer = () => {
 		</div>
 	);
 };
-export default PlayMultiPlayer;
+export default MultiplayerPlay;
