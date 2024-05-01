@@ -17,7 +17,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* drop shadow */
 }
 
-.close-button {
+.modal button{
     background-color: transparent;
     border: 2px solid #493B29;
     border-radius: 10px;
