@@ -3,7 +3,7 @@ import React, {useEffect, useState }from "react";
 import { useNavigate } from "react-router-dom";
 import "./singleplayer.css";
 import Modal from "./modal";
-import logo from "./Bacon.png";
+import logo from "./bacon_horizontal.png";
 const Singleplayer = () => {
 	const [firstTimeDone, setFirstTimeDone] = useState(false); //Flag for first time through
 	const [dailyActors, setDailyActors] = useState({}); // 2 daily actors
@@ -103,6 +103,28 @@ const Singleplayer = () => {
 		});
 	}
 	
+	const getMovie = (movie_id) => {
+		// Gets actor from API
+		return new Promise((resolve, reject) => {
+			fetch(`${process.env.REACT_APP_API_URL}/movies/${movie_id}`)
+			.then((resp) => {
+				if(!resp.ok) {
+					reject(new Error ("404"));
+				} else {
+					return(resp.json());
+				}
+			})
+			.then(data => {
+				if (data) {
+					resolve(data);
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(err => {console.error(err);});
+		});
+	}
+	
 	const movieSelected = (movie) => {
 		setSearchVal("");
 		if (firstTimeDone) {
@@ -112,7 +134,14 @@ const Singleplayer = () => {
 					getActor(result.list[0][0]).then((actor) => {
 						appendToActDisplay(actor.name);
 					});
-					appendToBoxDisplay(movie);
+					getMovie(movie.movie_id).then((m) => {
+  						if(m) {
+							appendToBoxDisplay(m);
+						}
+						else {
+							console.log("waiting on getMovie");
+						}
+					});
 					movie2actor(movie.movie_id, dailyActors.person2.person_id).then((result) => {
 						if (result) {
 							setGameOver(true);
@@ -123,7 +152,14 @@ const Singleplayer = () => {
 						}
 					});
 					setSelectedMovie(movie);
-					appendToBoxDisplay(movie);
+					getMovie(movie.movie_id).then((m) => {
+  						if(m) {
+							appendToBoxDisplay(m);
+						}
+						else {
+							console.log("waiting on getMovie");
+						}
+					});
 				} else {
 					setStatus(1);
 					setAlertText(`${selectedMovie.title} and ${movie.title} do not share an actor/director, try again!`)
@@ -133,7 +169,14 @@ const Singleplayer = () => {
 			// if this is the first time
 			movie2actor(movie.movie_id, dailyActors.person1.person_id).then((result) => {
 				if (result) {
-					appendToBoxDisplay(movie);
+					getMovie(movie.movie_id).then((m) => {
+  						if(m) {
+							appendToBoxDisplay(m);
+						}
+						else {
+							console.log("waiting on getMovie");
+						}
+					});
 					appendToActDisplay(dailyActors.person1.name);
 					movie2actor(movie.movie_id, dailyActors.person2.person_id).then((result) => {
 						if (result) {
@@ -205,7 +248,7 @@ const Singleplayer = () => {
 					<div id="photos_box">
 						<div>
 							<img id="actor_photo1" alt="actor_photo1" src={`${dailyActors.person1.poster_path}`}/>
-							<div id="actor_name1"><p>{dailyActors.person1.name}</p></div>
+							<p id="actor_name1">{dailyActors.person1.name}</p>
 						</div>
 						<div>
 							<h1 id="scoreboard">{boxDisplay.length}</h1>
@@ -213,7 +256,7 @@ const Singleplayer = () => {
 						</div>
 						<div> 
 							<img id="actor_photo2" alt="actor_photo2" src={`${dailyActors.person2.poster_path}`}/>
-							<div id="actor_name2"><p>{dailyActors.person2.name}</p></div>
+							<p id="actor_name2">{dailyActors.person2.name}</p>
 						</div>
 					</div>
 				}
@@ -226,19 +269,19 @@ const Singleplayer = () => {
 			}
 			<div>
 				<input onChange={(e)=>setSearchVal(e.target.value)} type="text" id="movie_input" placeholder="movie"/>
-				<div style={{position: "absolute"}}>
+				<div style={{position: "relative", textAlign: "center"}}>
 				{ (searchVal !== "") &&
-				<div style={{backgroundColor: '#E2E3E0', zIndex: 1, position: "relative"}}>
+				<div id="search_results">
 					{searchData.map((item, index) => {		
 						return(
-							<p onClick={() => {movieSelected(item)}} key={index}>{item.title} {item.release_date.split(" ")[3]}</p>
+							<p onClick={() => {movieSelected(item)}} key={index}>{item.title} ({item.release_date.split(" ")[3]})</p>
 						);
 					})}
 				</div>}
 				</div>
 			</div>
 			<div id="actors_scroll">
-				{console.log(actDisplay)}
+				{console.log(boxDisplay)}
 				{boxDisplay.map((d, idx) => {
 					return (
 						<div>
@@ -249,7 +292,11 @@ const Singleplayer = () => {
 									</div>
 									<div class="movie_item">
 										<img class="movie_poster" src={`${d.poster_path}`} alt="movie_poster"/>
-										<div class="movie_title"><p>{d.title} {d.release_date.split(" ")[3]}</p></div>
+										<div class="movie_title">
+											<p>{d.title} ({d.release_date.split(" ")[3]})</p>
+											<p>Starring: {d.actors[0].name}, {d.actors[1].name}, {d.actors[2].name}</p>
+											<p>Directed by: {d.director.name}</p>
+										</div>
 									</div>
 								</div>
 							}
