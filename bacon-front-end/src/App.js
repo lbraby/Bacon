@@ -9,8 +9,6 @@ import {
 import Home from "./pages";
 import Singleplayer from "./pages/singleplayer";
 import Multiplayer from "./pages/multiplayer";
-import PlayMultiPlayer from './pages/playmultiplayer';
-import MultiplayerLoading from './pages/multiplayerloading';
 
 function App() {
 	document.body.style = 'background: #E2E3E0';

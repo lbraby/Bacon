@@ -89,7 +89,7 @@ const MultiplayerStart = ({setScreenCount, setGameId, setUserType}) => {
 	return (
 		<div id="main_box">
 			{(showModal === 1) &&
-				<Modal isOpen={showModal}>
+				<Modal isOpen={showModal} onClickOutside={() => setShowModal(0)}>
 					<h2>Enter a username</h2>
 					<div className="host_container">
 						<input type="text" placeholder="Enter Name" onChange={(e) => setUserName(e.target.value)}/>
@@ -98,7 +98,7 @@ const MultiplayerStart = ({setScreenCount, setGameId, setUserType}) => {
 				</Modal>
 			}
 			{(showModal === 2) &&
-				<Modal isOpen={showModal}>
+				<Modal isOpen={showModal} onClickOutside={() => setShowModal(0)}>
 					<h2>Enter a username</h2>
 					<div className="host_container">
 						<input type="text" placeholder="Enter Name" onChange={(e) => setUserName(e.target.value)}/>

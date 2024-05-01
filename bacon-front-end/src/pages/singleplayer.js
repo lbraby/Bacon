@@ -186,7 +186,7 @@ const Singleplayer = () => {
 	return (
 		<div id="main_box">
 			{(status === 3) &&
-				<Modal isOpen={modalIsOpen}>
+				<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
 					<h3>You win!</h3>
 					<p>{`${dailyActors.person1.name} and ${dailyActors.person2.name} are both in ${selectedMovie.title}`}</p>
 					<button 
