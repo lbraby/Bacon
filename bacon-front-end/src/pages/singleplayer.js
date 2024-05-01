@@ -229,7 +229,7 @@ const Singleplayer = () => {
 	return (
 		<div id="main_box">
 			{(status === 3) &&
-				<Modal isOpen={modalIsOpen} onClose={closeModal}>
+				<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
 					<img src={pig}/>
 					<h3>Congratulations!</h3>
 					<p>{`${dailyActors.person1.name} and ${dailyActors.person2.name} are both in ${selectedMovie.title}`}</p>
