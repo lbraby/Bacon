@@ -245,16 +245,16 @@ const Singleplayer = () => {
 						loading...
 					</div>
 					:
-					<div id="photos_box">
-						<div>
+					<div class="container">
+						<div class="child" style={{width: "20%"}}>
 							<img id="actor_photo1" alt="actor_photo1" src={`${dailyActors.person1.poster_path}`}/>
 							<p id="actor_name1">{dailyActors.person1.name}</p>
 						</div>
-						<div>
+						<div class="child" style={{width: "20%"}}>
 							<h1 id="scoreboard">{boxDisplay.length}</h1>
 							<img id="bacon" src={logo} alt="score"/>
 						</div>
-						<div> 
+						<div class="child" style={{width: "20%"}}> 
 							<img id="actor_photo2" alt="actor_photo2" src={`${dailyActors.person2.poster_path}`}/>
 							<p id="actor_name2">{dailyActors.person2.name}</p>
 						</div>

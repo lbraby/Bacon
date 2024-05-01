@@ -8,24 +8,30 @@ body {
   text-align: center;
 }
 
-#photos_box {
+.container {
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
   margin-top: 30px;
   height: 20%;
   text-align: center;
 }
 
+.child {
+  
+}
+
 #actor_photo1 {
   object-fit: contain;
   aspect-ratio: 2/3;
-  width: 33%;
+  height: 200px;
 }
 
 #actor_photo2 {
   object-fit: contain;
   aspect-ratio: 2/3;
-  width: 33%;
+  height: 200px;
 }
 
 #actor_name1 {
@@ -46,8 +52,8 @@ body {
 }
 
 #bacon {
-  width: 33%;
   margin-top: 0;
+  width: 100%;
 }
 
 #movie_input {
