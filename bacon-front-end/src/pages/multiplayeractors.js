@@ -8,7 +8,7 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 	const [searchVal, setSearchVal] = useState("");
 	const [searchData, setSearchData] = useState([]);
 	const [selectedActor, setSelectedActor] = useState({});
-	const totalSeconds = 15;
+	const totalSeconds = 3;
 
 	const actorSelected = (actor) => {
 		setSearchVal("");
@@ -18,8 +18,13 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 	const submitActor = () => {
 		let personId = 0;
 		if (Object.keys(selectedActor).length === 0) {
-			// set default to Kevin Bacon
-			personId = 4724;
+			if (userType === "host") {
+				personId = 4724;
+				// set default starting actor to Kevin Bacon
+			} else {
+				personId = 518;
+				// set default ending actor to Danny DeVito
+			}
 		} else {
 			personId = selectedActor.person_id;
 		}
@@ -30,14 +35,14 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 			},
 			body: JSON.stringify({})
 		};
-		if (userType === "guest") {
+		if (userType === "host") {
+			console.log(`HOST game_id: ${gameId}, person_id: ${personId}`)
 			apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/selectperson/userhost/${personId}/`, options)
-			.then(() => setScreenCount(3))
 			.catch((err) => alert("error submitting actor " + err))
 		}
-		else if (userType === "host") {
+		else if (userType === "guest") {
+			console.log(`GUEST game_id: ${gameId}, person_id: ${personId}`)
 			apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/selectperson/otheruser/${personId}/`, options)
-			.then(() => setScreenCount(3))
 			.catch((err) => alert("error submitting actor " + err))
 		}
 	};
@@ -58,6 +63,9 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 			setCount(prevCount + 1);
 			if ((totalSeconds - (prevCount + 1)) === 0 ) {
 				submitActor();
+			}
+			if ((totalSeconds - (prevCount + 1)) === -3 ) {
+				setScreenCount(3);
 			}
 			// send pulse
 			if(userType === "host") {

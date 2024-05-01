@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MultiplayerLoading from "./multiplayerloading";
 import MultiplayerStart from "./multiplayerstart";
-import MultiplayerPlay from "./playmultiplayer";
+import MultiplayerPlay from "./multiplayerplay";
 import MultiplayerActors from "./multiplayeractors";
 import "./multiplayer.css";
 
@@ -32,7 +32,7 @@ const Multiplayer = () => {
 				/>
 			}
 			{(screenCount === 3) &&
-				<MultiplayerPlay />
+				<MultiplayerPlay userType={userType} gameId={gameId}/>
 			}
 		</div>
 	);

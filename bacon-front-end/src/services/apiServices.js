@@ -53,3 +53,33 @@ export const sendPulseGuest = (gameId) => {
             .catch(err => reject(err));
     })
 };
+
+export const checkHostPulse = (gameId) => {
+	const options = {};
+	return new Promise((resolve, reject) => {
+        fetch(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/pulsecheck/userhost/`, options)
+			.then((resp) => {
+				if(!resp.ok) {
+					return(new Error ("404"));
+				} else {
+					resolve(resp.json());
+				}
+			})
+            .catch(err => reject(err));
+    })
+};
+
+export const checkGuestPulse = (gameId) => {
+	const options = {};
+	return new Promise((resolve, reject) => {
+        fetch(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/pulsecheck/otheruser/`, options)
+			.then((resp) => {
+				if(!resp.ok) {
+					return(new Error ("404"));
+				} else {
+					resolve(resp.json());
+				}
+			})
+            .catch(err => reject(err));
+    })
+};
