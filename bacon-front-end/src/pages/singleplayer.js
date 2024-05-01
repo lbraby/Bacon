@@ -19,11 +19,6 @@ const Singleplayer = () => {
 	const [alertText, setAlertText] = useState("");
 	const navigate = useNavigate();
 
-	const closeModal = () => {
-		setModalIsOpen(false);
-		navigate("/");
-	};
-
 	const appendToBoxDisplay = (thing)=> {
 		// Appends to the list to be displayed on the UI
 		let prevBoxDisplay = [...boxDisplay];
@@ -238,6 +233,14 @@ const Singleplayer = () => {
 					<img src={pig}/>
 					<h3>Congratulations!</h3>
 					<p>{`${dailyActors.person1.name} and ${dailyActors.person2.name} are both in ${selectedMovie.title}`}</p>
+					<button 
+						onClick={() => {
+							setModalIsOpen(0);
+							navigate("/");
+						}}
+					>
+						Close
+					</button>
 				</Modal>
 			}
 			<div>
@@ -289,7 +292,6 @@ const Singleplayer = () => {
 				</div>
 			</div>
 			<div id="actors_scroll">
-				{console.log(boxDisplay)}
 				{boxDisplay.map((d, idx) => {
 					return (
 						<div>
