@@ -20,6 +20,12 @@ const MultiplayerPlay = ({userType, gameId}) => {
 	const [alertText, setAlertText] = useState("");
 	const navigate = useNavigate();
 	const [count, setCount] = useState(0);
+	const [gameDone, setGameDone] = useState(0);
+	const [result, setResult] = useState("")
+	const [myLinks, setMyLinks] = useState(0);
+	const [myTime, setMyTime] = useState(0);
+	const [otherLinks, setOtherLinks] = useState(0);
+	const [otherTime, setOtherTime] = useState(0);
 
 	useEffect(() => {
 		// update count every second
@@ -48,8 +54,81 @@ const MultiplayerPlay = ({userType, gameId}) => {
 				})
 				.catch(err => console.error("error checking tatus " + err));
 			}
+			// check if game is done
+			if (!gameDone) {
+				apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/getscores/`)
+				.then(data => {
+					const hostLink = data.userhost_link_count;
+					const guestLink = data.otheruser_link_count;
+					const hostTime = data.userhost_time_seconds;
+					const guestTime = data.otheruser_time_seconds;
+					if(hostLink && guestLink) {
+						setGameDone(1);
+						setStatus(3);
+						if (userType === "host") {
+							setMyLinks(hostLink);
+							setMyTime(hostTime);
+							setOtherLinks(guestLink);
+							setOtherTime(guestTime);
+
+							if (hostLink < guestLink) {
+								setResult("win");
+							} else if (hostLink > guestLink) {
+								setResult("lose");
+							// if link count equal
+							} else {
+								if (hostTime < guestTime) {
+									setResult("win");
+								} else if (hostTime > guestTime) {
+									setResult("lose");
+								} else {
+									setResult("tie");
+								}
+							}
+						}
+						else {
+							setMyLinks(guestLink);
+							setMyTime(guestTime);
+							setOtherLinks(hostLink);
+							setOtherTime(hostTime);
+
+							if (hostLink > guestLink) {
+								setResult("win");
+							} else if (hostLink < guestLink) {
+								setResult("lose");
+							// if link count equal
+							} else {
+								if (hostTime > guestTime) {
+									setResult("win");
+								} else if (hostTime < guestTime) {
+									setResult("lose");
+								} else {
+									setResult("tie");
+								}
+							}
+						}
+					}
+				})
+			}
 		}, 1000);
 	}, [count, gameId, userType]);
+
+	const submitScore = () => {
+		const options = {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({})
+		};
+		if (userType === "guest") {
+			apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/score/otheruser/${count}/${boxDisplay.length}/`, options)
+			.then(() => setStatus(5))
+		} else {
+			apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/score/userhost/${count}/${boxDisplay.length}/`, options)
+			.then(() => setStatus(5))
+		}
+	};
 
 	const appendToBoxDisplay = (thing)=> {
 		// Appends to the list to be displayed on the UI
@@ -144,7 +223,7 @@ const MultiplayerPlay = ({userType, gameId}) => {
 					movie2actor(movie.movie_id, dailyActors.person2.person_id).then((result) => {
 						if (result) {
 							setGameOver(true);
-							setStatus(3);
+							submitScore();
 						} else {
 							setStatus(2);
 							setAlertText(`${dailyActors.person2.name} was not in ${movie.title}, keep going!`);
@@ -166,7 +245,7 @@ const MultiplayerPlay = ({userType, gameId}) => {
 					movie2actor(movie.movie_id, dailyActors.person2.person_id).then((result) => {
 						if (result) {
 							setGameOver(true);
-							setStatus(3);
+							submitScore();
 						} else {
 							setStatus(2);
 							setAlertText(`${dailyActors.person2.name} was not in ${movie.title}, keep going!`);
@@ -204,7 +283,6 @@ const MultiplayerPlay = ({userType, gameId}) => {
 		apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/getselectedpeople/`)
 		// get starting actor
 		.then(data => {
-			console.log(data);
 			if(data.userhost_person_id, data.otheruser_person_id) {
 				fetchDailyActors(data.userhost_person_id, data.otheruser_person_id);
 			}
@@ -243,9 +321,20 @@ const MultiplayerPlay = ({userType, gameId}) => {
 			:
 			<div id="main_box">
 				{(status === 3) &&
+
 					<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
-						<h3>You win!</h3>
-						<p>{`${dailyActors.person1.name} and ${dailyActors.person2.name} are both in ${selectedMovie.title}`}</p>
+						<h3>You {result}!</h3>
+						<div style={{display: "flex", flexDirection: "row"}}>
+							<div>
+								<p>{`Your link count: ${myLinks}`}</p>
+								<p>{`Your time: ${myTime}`}</p>
+							</div>
+							<div>
+								<p>{`Opponent link count: ${otherLinks}`}</p>
+								<p>{`Opponent time: ${otherTime}`}</p>
+							</div>
+
+						</div>
 						<button 
 							onClick={() => {
 								setModalIsOpen(0);
@@ -268,6 +357,13 @@ const MultiplayerPlay = ({userType, gameId}) => {
 						>
 							Close
 						</button>
+					</Modal>
+				}
+				{(status === 5) &&
+					<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
+						<h3>You finished!</h3>
+						<p>{`${dailyActors.person1.name} and ${dailyActors.person2.name} are both in ${selectedMovie.title}`}</p>
+						<p>Waiting for your opponent</p>
 					</Modal>
 				}
 				<div>

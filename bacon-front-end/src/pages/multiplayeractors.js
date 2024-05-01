@@ -8,7 +8,8 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 	const [searchVal, setSearchVal] = useState("");
 	const [searchData, setSearchData] = useState([]);
 	const [selectedActor, setSelectedActor] = useState({});
-	const totalSeconds = 3;
+	const totalSeconds = 15;
+	const delaySeconds = 5;
 
 	const actorSelected = (actor) => {
 		setSearchVal("");
@@ -36,12 +37,10 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 			body: JSON.stringify({})
 		};
 		if (userType === "host") {
-			console.log(`HOST game_id: ${gameId}, person_id: ${personId}`)
 			apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/selectperson/userhost/${personId}/`, options)
 			.catch((err) => alert("error submitting actor " + err))
 		}
 		else if (userType === "guest") {
-			console.log(`GUEST game_id: ${gameId}, person_id: ${personId}`)
 			apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/selectperson/otheruser/${personId}/`, options)
 			.catch((err) => alert("error submitting actor " + err))
 		}
@@ -64,7 +63,7 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 			if ((totalSeconds - (prevCount + 1)) === 0 ) {
 				submitActor();
 			}
-			if ((totalSeconds - (prevCount + 1)) === -3 ) {
+			if ((totalSeconds - (prevCount + 1)) === -delaySeconds ) {
 				setScreenCount(3);
 			}
 			// send pulse
