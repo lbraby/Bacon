@@ -1,14 +1,18 @@
 import "./modal.css";
-const Modal = ({ isOpen, onClose, children }) => {
-    if (!isOpen) return null;
+import { useRef } from "react";
 
+const Modal = ({ isOpen, children, onClickOutside }) => {
+    const modalRef = useRef(null);
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClickOutside();
+      }
+    }
+    if (!isOpen) return null;
     return (
-      <div className="modal-overlay">
-        <div className="modal">
+      <div className="modal-overlay" onClick={handleClickOutside}>
+        <div className="modal" ref={modalRef}>
           {children}
-          <button className="close-button" onClick={onClose}>
-            Close
-          </button>
         </div>
       </div>
     );

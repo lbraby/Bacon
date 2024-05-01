@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./singleplayer.css";
 import Modal from "./modal";
 import logo from "./Bacon.png";
+
 const Singleplayer = () => {
 	const [firstTimeDone, setFirstTimeDone] = useState(false); //Flag for first time through
 	const [dailyActors, setDailyActors] = useState({}); // 2 daily actors
@@ -17,11 +18,6 @@ const Singleplayer = () => {
 	const [modalIsOpen, setModalIsOpen] = useState(true);
 	const [alertText, setAlertText] = useState("");
 	const navigate = useNavigate();
-
-	const closeModal = () => {
-		setModalIsOpen(false);
-		navigate("/");
-	};
 
 	const appendToBoxDisplay = (thing)=> {
 		// Appends to the list to be displayed on the UI
@@ -190,9 +186,17 @@ const Singleplayer = () => {
 	return (
 		<div id="main_box">
 			{(status === 3) &&
-				<Modal isOpen={modalIsOpen} onClose={closeModal}>
+				<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
 					<h3>You win!</h3>
 					<p>{`${dailyActors.person1.name} and ${dailyActors.person2.name} are both in ${selectedMovie.title}`}</p>
+					<button 
+						onClick={() => {
+							setModalIsOpen(0);
+							navigate("/");
+						}}
+					>
+						Close
+					</button>
 				</Modal>
 			}
 			<div>
@@ -231,14 +235,20 @@ const Singleplayer = () => {
 				<div style={{backgroundColor: '#E2E3E0', zIndex: 1, position: "relative"}}>
 					{searchData.map((item, index) => {		
 						return(
-							<p onClick={() => {movieSelected(item)}} key={index}>{item.title} {item.release_date.split(" ")[3]}</p>
+							<div>
+								{(item.release_date)
+									?
+									<p onClick={() => {movieSelected(item)}} key={index}>{item.title} ({item.release_date.split(" ")[3]})</p>
+									:
+									<p onClick={() => {movieSelected(item)}} key={index}>{item.title}</p>
+								}
+							</div>
 						);
 					})}
 				</div>}
 				</div>
 			</div>
 			<div id="actors_scroll">
-				{console.log(actDisplay)}
 				{boxDisplay.map((d, idx) => {
 					return (
 						<div>
