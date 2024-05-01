@@ -1,17 +1,28 @@
 #instructions {
   color: #493B29;
-  text-align: center;
-  width: 60%;
+  text-align: left;
+  width: 50%;
   outline: 2px inset;
   margin: auto;
 }
 
+h4 {
+  font-size: 1.2em;
+  padding: 10px;
+
+}
+
 .page_button {
-  border-radius: 32px;
-  background-color: #493B29;
-  border-color: #493B29;
+  border-radius: 16px;
+  background-color: #828281;
   color: #E2E3E0;
   height: 50px;
   width: 10%;
   font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.page_button:hover {
+  background-color: #fc873d;
 }

@@ -13,7 +13,7 @@ body {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 10px;
   height: 20%;
   text-align: center;
 }
@@ -25,21 +25,23 @@ body {
 #actor_photo1 {
   object-fit: contain;
   aspect-ratio: 2/3;
-  height: 200px;
+  height: 300px;
 }
 
 #actor_photo2 {
   object-fit: contain;
   aspect-ratio: 2/3;
-  height: 200px;
+  height: 300px;
 }
 
 #actor_name1 {
+  margin-top: 2px;
   font-size: 1.5em;
   font-weight: bold;
 }
 
 #actor_name2 {
+  margin-top: 2px;
   font-size: 1.5em;
   font-weight: bold;
 }
@@ -67,9 +69,21 @@ body {
 #search_results {
   background-color: #828281;
   width: 50%;
-  margin: auto;
+  left: 50%;
+  margin-left: -25%;
   z-index: 1;
   position: absolute;
+}
+
+.m_result {
+  margin: 0px;
+  font-size: 1.2em;
+  padding: 5px;
+  text-align: left;
+}
+
+.m_result:hover {
+  background-color: #a1a1a1
 }
 
 #actors_scroll {
@@ -79,7 +93,6 @@ body {
   height: 30%;
   overflow: auto;
   text-align: center;
-  border: inset 2px black;
 }
 
 .actor_item {
@@ -90,6 +103,8 @@ body {
   text-align: center;
   height: auto;
   border-radius: 16px;
+  margin-top: 3%;
+  margin-bottom: 3%;
 }
 
 .movie_item {
@@ -99,8 +114,8 @@ body {
   grid-template-columns: 30% 70%;
   border: 2px black inset;
   margin: auto;
-  margin-top: 1%;
-  margin-bottom: 1%;
+  margin-top: 5%;
+  margin-bottom: 5%;
 }
 
 .movie_poster {
@@ -114,12 +129,13 @@ body {
   font-size: 1.25em;
   padding: .5%;
   height: 8%;
+  text-align: left;
 }
 
 ::-webkit-scrollbar {
-  background: #493B29;
+  background: #828281;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #C37532;
+  background-color: #fc873d;
 }

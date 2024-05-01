@@ -246,7 +246,7 @@ const Singleplayer = () => {
 					</div>
 					:
 					<div class="container">
-						<div class="child" style={{width: "20%"}}>
+						<div class="child" style={{width: "30%"}}>
 							<img id="actor_photo1" alt="actor_photo1" src={`${dailyActors.person1.poster_path}`}/>
 							<p id="actor_name1">{dailyActors.person1.name}</p>
 						</div>
@@ -254,7 +254,7 @@ const Singleplayer = () => {
 							<h1 id="scoreboard">{boxDisplay.length}</h1>
 							<img id="bacon" src={logo} alt="score"/>
 						</div>
-						<div class="child" style={{width: "20%"}}> 
+						<div class="child" style={{width: "30%"}}> 
 							<img id="actor_photo2" alt="actor_photo2" src={`${dailyActors.person2.poster_path}`}/>
 							<p id="actor_name2">{dailyActors.person2.name}</p>
 						</div>
@@ -263,7 +263,7 @@ const Singleplayer = () => {
 			</div>
 			{((status === 1) || (status === 2))
 				&&
-				<h3 style={{marginBottom: "0px"}}>
+				<h3 style={{marginBottom: "0px", marginTop: "2px"}}>
 					{alertText}
 				</h3>
 			}
@@ -273,9 +273,15 @@ const Singleplayer = () => {
 				{ (searchVal !== "") &&
 				<div id="search_results">
 					{searchData.map((item, index) => {		
-						return(
-							<p onClick={() => {movieSelected(item)}} key={index}>{item.title} ({item.release_date.split(" ")[3]})</p>
-						);
+						if(item.release_date) {
+							return(
+								<p class="m_result" onClick={() => {movieSelected(item)}} key={index}>{item.title} ({item.release_date.split(" ")[3]})</p>
+							);
+						} else {
+							return(
+								<p class="m_result" onClick={() => {movieSelected(item)}} key={index}>{item.title}</p>
+							);
+						}
 					})}
 				</div>}
 				</div>
@@ -293,9 +299,9 @@ const Singleplayer = () => {
 									<div class="movie_item">
 										<img class="movie_poster" src={`${d.poster_path}`} alt="movie_poster"/>
 										<div class="movie_title">
-											<p>{d.title} ({d.release_date.split(" ")[3]})</p>
-											<p>Starring: {d.actors[0].name}, {d.actors[1].name}, {d.actors[2].name}</p>
-											<p>Directed by: {d.director.name}</p>
+											<h4 style={{marginBottom: "3px", marginTop: "8px"}}><b>{d.title} ({d.release_date.split(" ")[3]})</b></h4>
+											<p style={{marginBottom: "3px", marginTop: "3px"}}> -Directed by: {d.director.name}</p>
+											<p style={{marginBottom: "3px", marginTop: "3px"}}> -Starring: {d.actors[0].name}, {d.actors[1].name}, {d.actors[2].name}</p>
 										</div>
 									</div>
 								</div>
