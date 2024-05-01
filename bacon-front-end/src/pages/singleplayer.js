@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./singleplayer.css";
 import Modal from "./modal";
 import logo from "./bacon_horizontal.png";
+import pig from "./pig.gif";
 const Singleplayer = () => {
 	const [firstTimeDone, setFirstTimeDone] = useState(false); //Flag for first time through
 	const [dailyActors, setDailyActors] = useState({}); // 2 daily actors
@@ -234,7 +235,8 @@ const Singleplayer = () => {
 		<div id="main_box">
 			{(status === 3) &&
 				<Modal isOpen={modalIsOpen} onClose={closeModal}>
-					<h3>You win!</h3>
+					<img src={pig}/>
+					<h3>Congratulations!</h3>
 					<p>{`${dailyActors.person1.name} and ${dailyActors.person2.name} are both in ${selectedMovie.title}`}</p>
 				</Modal>
 			}
@@ -299,7 +301,7 @@ const Singleplayer = () => {
 									<div class="movie_item">
 										<img class="movie_poster" src={`${d.poster_path}`} alt="movie_poster"/>
 										<div class="movie_title">
-											<h4 style={{marginBottom: "3px", marginTop: "8px"}}><b>{d.title} ({d.release_date.split(" ")[3]})</b></h4>
+											<h4 style={{marginBottom: "3px", marginTop: "8px", fontFamily: "eczar"}}><b>{d.title} ({d.release_date.split(" ")[3]})</b></h4>
 											<p style={{marginBottom: "3px", marginTop: "3px"}}> -Directed by: {d.director.name}</p>
 											<p style={{marginBottom: "3px", marginTop: "3px"}}> -Starring: {d.actors[0].name}, {d.actors[1].name}, {d.actors[2].name}</p>
 										</div>
