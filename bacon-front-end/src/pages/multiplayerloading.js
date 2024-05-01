@@ -1,5 +1,5 @@
 import React, {useEffect, useState }from "react";
-import { apiWrapper } from "../services/apiwrapper";
+import { apiWrapper, sendPulseHost } from "../services/apiServices";
 import "./multiplayer.css";
 
 const MultiplayerLoading = ({gameId, setScreenCount}) => {
@@ -9,15 +9,15 @@ const MultiplayerLoading = ({gameId, setScreenCount}) => {
 		setTimeout(() => {
 			let prevCount = count;
 			setCount(prevCount + 1);
-			new Promise((resolve, reject) => {
-				apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/checkready/`)
-				.then(data => {
-					if (data.ready) {
-						setScreenCount(2);
-					}
-				})
-				.catch(err => console.error("error checking status " + err));
-			});
+			apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/checkready/`)
+			.then(data => {
+				if (data.ready) {
+					setScreenCount(2);
+				}
+			})
+			.catch(err => console.error("error checking status " + err));
+			sendPulseHost(gameId)
+			.catch(err => console.error("error updating status " + err));
 		}, 1000);
 	}, [count, gameId, setScreenCount]);
 	

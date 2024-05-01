@@ -1,9 +1,9 @@
 import React, {useEffect, useState }from "react";
-import { apiWrapper } from "../services/apiwrapper";
+import { apiWrapper } from "../services/apiServices";
 import Modal from "./modal";
 import "./multiplayer.css";
 
-const MultiplayerStart = ({setScreenCount, setGameId}) => {
+const MultiplayerStart = ({setScreenCount, setGameId, setUserType}) => {
 	const [searchVal, setSearchVal] = useState("");
 	const [joinableGames, setJoinableGames] = useState([]);
 	const [filteredGames, setFilteredGames] = useState([]);
@@ -30,6 +30,7 @@ const MultiplayerStart = ({setScreenCount, setGameId}) => {
 		.then(data => {
 			setGameId(data.game_id);
 			setShowModal(0);
+			setUserType("host");
 			setScreenCount(1);
 		})
 		.catch((err) => alert("error submitting username " + err))
@@ -49,6 +50,7 @@ const MultiplayerStart = ({setScreenCount, setGameId}) => {
 		.then(data => {
 			setGameId(tempGameId);
 			setShowModal(0);
+			setUserType("guest");
 			setScreenCount(2);
 		})
 		.catch((err) => alert("error submitting username " + err))
@@ -56,8 +58,7 @@ const MultiplayerStart = ({setScreenCount, setGameId}) => {
 	
 
 	useEffect(() => {
-		// TODO: Change this to something realistic
-		apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/joinablegames/1000000/`, {})
+		apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/joinablegames/10/`, {})
 			.then(data => {
 				setJoinableGames(data.data);
 				setFilteredGames(data.data);
