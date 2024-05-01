@@ -62,7 +62,7 @@ const MultiplayerPlay = ({userType, gameId}) => {
 					const guestLink = data.otheruser_link_count;
 					const hostTime = data.userhost_time_seconds;
 					const guestTime = data.otheruser_time_seconds;
-					if(hostLink && guestLink) {
+					if(hostLink !== null && guestLink !== null) {
 						setGameDone(1);
 						setStatus(3);
 						if (userType === "host") {
