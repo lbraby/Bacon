@@ -3,8 +3,9 @@ import React, {useEffect, useState }from "react";
 import { useNavigate } from "react-router-dom";
 import "./singleplayer.css";
 import Modal from "./modal";
-import logo from "./bacon_horizontal.png";
+import logo from "./Bacon.png";
 import pig from "./pig.gif";
+import Timer from "./timer";
 import { checkGuestPulse, sendPulseGuest, sendPulseHost, checkHostPulse, apiWrapper } from "../services/apiServices";
 
 const MultiplayerPlay = ({userType, gameId}) => {
@@ -27,6 +28,8 @@ const MultiplayerPlay = ({userType, gameId}) => {
 	const [myTime, setMyTime] = useState(0);
 	const [otherLinks, setOtherLinks] = useState(0);
 	const [otherTime, setOtherTime] = useState(0);
+	const [timeOutExplanation, setTimeOutExplanation] = useState("");
+	const totalSeconds = 30;
 
 	useEffect(() => {
 		// update count every second
@@ -110,6 +113,44 @@ const MultiplayerPlay = ({userType, gameId}) => {
 						}
 					}
 				})
+			}
+			// check if timer is done
+			if ((totalSeconds - count) === -1) {
+				apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/getscores/`)
+				.then(data => {
+					const hostLink = data.userhost_link_count;
+					const guestLink = data.otheruser_link_count;
+
+					if (userType === "host") {
+						if (hostLink != null && guestLink == null) {
+							setResult("won");
+							setTimeOutExplanation("Your opponent timed out.");
+						}
+						else if (hostLink == null && guestLink != null) {
+							setResult("lose");
+							setTimeOutExplanation("You timed out.");
+						}
+						else {
+							setResult("tied");
+							setTimeOutExplanation("You both timed out.");
+						}
+					} else {
+						if (hostLink == null && guestLink != null) {
+							setResult("won");
+							setTimeOutExplanation("Your opponent timed out.");
+						}
+						else if (hostLink != null && guestLink == null) {
+							setResult("lose");
+							setTimeOutExplanation("You timed out.");
+						}
+						else {
+							setResult("tied");
+							setTimeOutExplanation("You both timed out.");
+						}
+					}
+					setStatus(6);
+				})
+
 			}
 		}, 1000);
 	}, [count, gameId, userType]);
@@ -304,7 +345,6 @@ const MultiplayerPlay = ({userType, gameId}) => {
 					getActor(end_id)
 						.then((data) => {
 							endingActor = data;
-							console.log([startingActor, endingActor])
 							setDailyActors({
 								"person1":startingActor,
 								"person2":endingActor
@@ -322,7 +362,6 @@ const MultiplayerPlay = ({userType, gameId}) => {
 			:
 			<div id="main_box">
 				{(status === 3) &&
-
 					<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
 						<div>
 						{
@@ -336,11 +375,11 @@ const MultiplayerPlay = ({userType, gameId}) => {
 						<h3>You {result}!</h3>
 						<div style={{display: "flex", flexDirection: "row", gap: "30px", justifyContent: "center"}}>
 							<div>
-								<p>{`Your link count: ${myLinks}`}</p>
+								<p>{`Your link count: ${myLinks + 1}`}</p>
 								<p>{`Your time: ${myTime}`}</p>
 							</div>
 							<div>
-								<p>{`Opponent link count: ${otherLinks}`}</p>
+								<p>{`Opponent link count: ${otherLinks + 1}`}</p>
 								<p>{`Opponent time: ${otherTime}`}</p>
 							</div>
 
@@ -376,6 +415,20 @@ const MultiplayerPlay = ({userType, gameId}) => {
 						<p>Waiting for your opponent</p>
 					</Modal>
 				}
+				{(status === 6) &&
+					<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
+						<h3>{`You ${result}!`}</h3>
+						<p>{timeOutExplanation}</p>
+						<button 
+							onClick={() => {
+								setModalIsOpen(0);
+								navigate("/");
+							}}
+						>
+							Close
+						</button>
+					</Modal>
+				}
 				<div>
 					{(Object.keys(dailyActors).length === 0)
 						?
@@ -399,6 +452,7 @@ const MultiplayerPlay = ({userType, gameId}) => {
 						</div>
 					}
 				</div>
+				<Timer totalSeconds={totalSeconds} newSeconds={count}/>
 				{((status === 1) || (status === 2))
 					&&
 					<h3 style={{marginBottom: "0px"}}>
