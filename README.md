@@ -175,15 +175,16 @@ Steps for setting up movie db
 - Content example:
     ```json
     {
+        "game_id": 31,
         "person1": {
-            "name": "Harrison Ford",
-            "person_id": 3,
-            "poster_path": "https://image.tmdb.org/t/p/original/ActhM39LTxgx3tnJv3s5nM6hGD1.jpg"
+            "name": "Jack Black",
+            "person_id": 70851,
+            "poster_path": "https://image.tmdb.org/t/p/original/rtCx0fiYxJVhzXXdwZE2XRTfIKE.jpg"
         },
         "person2": {
-            "name": "Steven Spielberg",
-            "person_id": 488,
-            "poster_path": "https://image.tmdb.org/t/p/original/tZxcg19YQ3e8fJ0pOs7hjlnmmr6.jpg"
+            "name": "Chris Pratt",
+            "person_id": 73457,
+            "poster_path": "https://image.tmdb.org/t/p/original/83o3koL82jt30EJ0rz4Bnzrt2dd.jpg"
         },
         "result": "success"
     }
