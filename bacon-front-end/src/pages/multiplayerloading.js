@@ -1,6 +1,7 @@
 import React, {useEffect, useState }from "react";
 import { apiWrapper, sendPulseHost } from "../services/apiServices";
 import "./multiplayer.css";
+import loading from '../Loading.gif';
 
 const MultiplayerLoading = ({gameId, setScreenCount}) => {
 	const [count, setCount] = useState(0);
@@ -25,7 +26,7 @@ const MultiplayerLoading = ({gameId, setScreenCount}) => {
 		<div id="main_box">
 			<div id="games_scroll">
 				<h2>Loading...</h2>
-				<p>{count}</p>
+				<img styles={{width: "80%", margin: "auto"}} src={loading} alt={"loading gif"} />
 			</div>
 		</div>
 	);

@@ -29,7 +29,7 @@ const MultiplayerPlay = ({userType, gameId}) => {
 	const [otherLinks, setOtherLinks] = useState(0);
 	const [otherTime, setOtherTime] = useState(0);
 	const [timeOutExplanation, setTimeOutExplanation] = useState("");
-	const totalSeconds = 30;
+	const totalSeconds = 150;
 
 	useEffect(() => {
 		// update count every second

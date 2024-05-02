@@ -1,6 +1,7 @@
 import React, {useEffect, useState }from "react";
 import { apiWrapper, sendPulseGuest, sendPulseHost } from "../services/apiServices";
 import Timer from "./timer";
+import loading from '../Loading.gif';
 import "./multiplayer.css";
 
 const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
@@ -8,6 +9,7 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 	const [searchVal, setSearchVal] = useState("");
 	const [searchData, setSearchData] = useState([]);
 	const [selectedActor, setSelectedActor] = useState({});
+	const [inDelay, setInDelay] = useState(0);
 	const totalSeconds = 15;
 	const delaySeconds = 5;
 
@@ -61,6 +63,7 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 			let prevCount = count;
 			setCount(prevCount + 1);
 			if ((totalSeconds - (prevCount + 1)) === 0 ) {
+				setInDelay(1);
 				submitActor();
 			}
 			if ((totalSeconds - (prevCount + 1)) === -delaySeconds ) {
@@ -84,7 +87,7 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 					?
 					<div>
 						<p>Since you are the guest, you will choose the ending actor</p>
-						<p>If you do not select an actor, Kevin Bacon will be chosen by default</p>
+						<p>If you do not select an actor, Danny DeVito will be chosen by default</p>
 					</div>
 					:
 					<div>
@@ -92,22 +95,32 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 						<p>If you do not select an actor, Kevin Bacon will be chosen by default</p>
 					</div>
 				}
-				<Timer totalSeconds={totalSeconds} newSeconds={count} />
-				<div className="host_container">
-					{ (Object.keys(selectedActor).length !== 0) &&
-						`Selected Actor: ${selectedActor.name}`
-					}
-					<input style={{marginTop: "5px"}} onChange={(e) => setSearchVal(e.target.value)} placeholder="enter an actor's name"/> 
-					{ (searchVal !== "") &&
-						<div style={{backgroundColor: '#E2E3E0', zIndex: 1, position: "relative"}}>
-							{searchData.map((item, index) => {		
-								return(
-									<p onClick={() => actorSelected(item)} key={index}>{item.name}</p>
-								);
-							})}
-						</div>
-					}
+				{(inDelay)
+				?
+				<div>
+					<p>Loading...</p>
+					<img src={loading} alt={"loading gif"} />
 				</div>
+				:
+				<div>
+					<Timer totalSeconds={totalSeconds} newSeconds={count} />
+					<div className="host_container">
+						{ (Object.keys(selectedActor).length !== 0) &&
+							<p>{`Selected Actor: ${selectedActor.name}`}</p>
+						}
+						<input style={{marginTop: "5px"}} onChange={(e) => setSearchVal(e.target.value)} placeholder="enter an actor's name"/> 
+						{ (searchVal !== "") &&
+							<div style={{backgroundColor: '#E2E3E0', zIndex: 1, position: "relative"}}>
+								{searchData.map((item, index) => {		
+									return(
+										<p onClick={() => actorSelected(item)} key={index}>{item.name}</p>
+									);
+								})}
+							</div>
+						}
+					</div>
+				</div>
+				}
 		</div>
 	);
 };
