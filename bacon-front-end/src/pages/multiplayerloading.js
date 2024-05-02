@@ -25,7 +25,7 @@ const MultiplayerLoading = ({gameId, setScreenCount}) => {
 	return (
 		<div id="main_box">
 			<div id="games_scroll">
-				<h2>Loading...</h2>
+				<h2>Waiting for opponent to join...</h2>
 				<img styles={{width: "80%", margin: "auto"}} src={loading} alt={"loading gif"} />
 			</div>
 		</div>
