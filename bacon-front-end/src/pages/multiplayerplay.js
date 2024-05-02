@@ -1,9 +1,10 @@
-// pages/singleplayer.js
+// pages/multiplayer.js
 import React, {useEffect, useState }from "react";
 import { useNavigate } from "react-router-dom";
 import "./singleplayer.css";
 import Modal from "./modal";
-import logo from "./Bacon.png";
+import logo from "./bacon_horizontal.png";
+import pig from "./pig.gif";
 import { checkGuestPulse, sendPulseGuest, sendPulseHost, checkHostPulse, apiWrapper } from "../services/apiServices";
 
 const MultiplayerPlay = ({userType, gameId}) => {
@@ -323,8 +324,17 @@ const MultiplayerPlay = ({userType, gameId}) => {
 				{(status === 3) &&
 
 					<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
+						<div>
+						{
+							(result === "win")
+							?
+							<div><img src={pig} style={{width: "20%"}}/></div>
+							:
+							<div><img src={logo} style={{width: "20%"}}/></div>
+						}
+						</div>
 						<h3>You {result}!</h3>
-						<div style={{display: "flex", flexDirection: "row"}}>
+						<div style={{display: "flex", flexDirection: "row", gap: "30px", justifyContent: "center"}}>
 							<div>
 								<p>{`Your link count: ${myLinks}`}</p>
 								<p>{`Your time: ${myTime}`}</p>
@@ -373,18 +383,18 @@ const MultiplayerPlay = ({userType, gameId}) => {
 							loading...
 						</div>
 						:
-						<div id="photos_box">
-							<div>
+						<div class="container">
+							<div class="child" style={{width: "30%"}}>
 								<img id="actor_photo1" alt="actor_photo1" src={`${dailyActors.person1.image_path}`}/>
-								<div id="actor_name1"><p>{dailyActors.person1.name}</p></div>
+								<p id="actor_name1">{dailyActors.person1.name}</p>
 							</div>
-							<div>
+							<div class="child" style={{width: "20%"}}>
 								<h1 id="scoreboard">{boxDisplay.length}</h1>
 								<img id="bacon" src={logo} alt="score"/>
 							</div>
-							<div> 
+							<div class="child" style={{width: "30%"}}> 
 								<img id="actor_photo2" alt="actor_photo2" src={`${dailyActors.person2.image_path}`}/>
-								<div id="actor_name2"><p>{dailyActors.person2.name}</p></div>
+								<p id="actor_name2">{dailyActors.person2.name}</p>
 							</div>
 						</div>
 					}
@@ -397,20 +407,19 @@ const MultiplayerPlay = ({userType, gameId}) => {
 				}
 				<div>
 					<input onChange={(e)=>setSearchVal(e.target.value)} type="text" id="movie_input" placeholder="movie"/>
-					<div style={{position: "absolute"}}>
+					<div style={{position: "relative", textAlign: "center"}}>
 					{ (searchVal !== "") &&
-					<div style={{backgroundColor: '#E2E3E0', zIndex: 1, position: "relative"}}>
+					<div id="search_results">
 						{searchData.map((item, index) => {		
-							return(
-								<div>
-									{(item.release_date)
-										?
-										<p onClick={() => {movieSelected(item)}} key={index}>{item.title} ({item.release_date.split(" ")[3]})</p>
-										:
-										<p onClick={() => {movieSelected(item)}} key={index}>{item.title}</p>
-									}
-								</div>
-							);
+							if(item.release_date) {
+                                                        	return(
+                                                                	<p class="m_result" onClick={() => {movieSelected(item)}} key={index}>{item.title} ({item.release_date.split(" ")[3]})</p>
+                                                        	);
+                                                	} else {
+                                                        	return(
+                                                                	<p class="m_result" onClick={() => {movieSelected(item)}} key={index}>{item.title}</p>
+                                                        	);
+                                                	}
 						})}
 					</div>}
 					</div>
@@ -426,7 +435,9 @@ const MultiplayerPlay = ({userType, gameId}) => {
 										</div>
 										<div class="movie_item">
 											<img class="movie_poster" src={`${d.poster_path}`} alt="movie_poster"/>
-											<div class="movie_title"><p>{d.title} {d.release_date.split(" ")[3]}</p></div>
+											<div class="movie_title">
+												<h4 style={{marginBottom: "3px", marginTop: "8px", fontFamily: "eczar"}}><b>{d.title} {d.release_date.split(" ")[3]}</b></h4>
+											</div>
 										</div>
 									</div>
 								}
