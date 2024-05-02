@@ -40,3 +40,17 @@ body {
   margin-bottom: auto;
 }
 
+#host_button {
+  border-radius: 16px;
+  background-color: #828281;
+  color: #E2E3E0;
+  height: 30px;
+  width: 20%;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#host_button:hover {
+  background-color: #fc873d;
+}

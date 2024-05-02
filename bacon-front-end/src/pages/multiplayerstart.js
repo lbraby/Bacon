@@ -106,7 +106,7 @@ const MultiplayerStart = ({setScreenCount, setGameId, setUserType}) => {
 					</div>
 				</Modal>
 			}
-			<button onClick={() => setShowModal(1)}>
+			<button id="host_button" onClick={() => setShowModal(1)}>
 				Host Game
 			</button>
 			<div>
