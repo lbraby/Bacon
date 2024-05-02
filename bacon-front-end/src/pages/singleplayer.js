@@ -304,8 +304,12 @@ const Singleplayer = () => {
 										<img class="movie_poster" src={`${d.poster_path}`} alt="movie_poster"/>
 										<div class="movie_title">
 											<h4 style={{marginBottom: "3px", marginTop: "8px", fontFamily: "eczar"}}><b>{d.title} ({d.release_date.split(" ")[3]})</b></h4>
-											<p style={{marginBottom: "3px", marginTop: "3px"}}> -Directed by: {d.director.name}</p>
-											<p style={{marginBottom: "3px", marginTop: "3px"}}> -Starring: {d.actors[0].name}, {d.actors[1].name}, {d.actors[2].name}</p>
+											{(d.director) &&
+												<p style={{marginBottom: "3px", marginTop: "3px"}}> -Directed by: {d.director.name}</p>
+											}
+											{(d.actors) &&
+												<p style={{marginBottom: "3px", marginTop: "3px"}}> -Starring: {d.actors[0].name}, {d.actors[1].name}, {d.actors[2].name}</p>
+											}
 										</div>
 									</div>
 								</div>
