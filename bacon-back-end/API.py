@@ -215,12 +215,14 @@ def dailymode():
                            values (:person1_id, :person2_id, trunc(sysdate))", 
 						   person1_id=person1["person_id"], person2_id=person2["person_id"])
             connection.commit()
-
         except cx_Oracle.DatabaseError as e:
             connection.rollback()
             cursor.close()
             connection.close()
             return jsonify({"error": "error commiting to table multiplayer"}), 500
+
+    cursor.execute("select max(id) from dailymode")
+    game_id = cursor.fetchone()[0]
 
     cursor.close()
     connection.close()
@@ -228,7 +230,8 @@ def dailymode():
     return jsonify({
         "result": "success",
         "person1": person1,
-        "person2": person2
+        "person2": person2,
+        "game_id": game_id
     })
 
 # pass userhost_name in body of request
@@ -461,7 +464,7 @@ def getselectedpeople(game_id):
         return jsonify({
             "userhost_person_id": row[0],
             "otheruser_person_id": row[1],
-            "default1_person_id": 1901628, # Kevin Bacon
+            "default1_person_id": 4724, # Kevin Bacon
             "default2_person_id": 518 # Danny DeVito
         })
     else:
