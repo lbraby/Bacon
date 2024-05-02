@@ -230,9 +230,9 @@ const Singleplayer = () => {
 		<div id="main_box">
 			{(status === 3) &&
 				<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
-					<img src={pig}/>
+					<img src={pig} style={{width: "30%"}}/>
 					<h3>Congratulations!</h3>
-					<p>{`${dailyActors.person1.name} and ${dailyActors.person2.name} are both in ${selectedMovie.title}`}</p>
+					<p>{`You connected ${dailyActors.person1.name} to ${dailyActors.person2.name} in ${boxDisplay.length}!`}</p>
 					<button 
 						onClick={() => {
 							setModalIsOpen(0);
