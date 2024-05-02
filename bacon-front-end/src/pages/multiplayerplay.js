@@ -251,6 +251,27 @@ const MultiplayerPlay = ({userType, gameId}) => {
 			.catch(err => {console.error(err);});
 		});
 	}
+	const getMovie = (movie_id) => {
+		// Gets actor from API
+		return new Promise((resolve, reject) => {
+			fetch(`${process.env.REACT_APP_API_URL}/movies/${movie_id}`)
+			.then((resp) => {
+				if(!resp.ok) {
+					reject(new Error ("404"));
+				} else {
+					return(resp.json());
+				}
+			})
+			.then(data => {
+				if (data) {
+					resolve(data);
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(err => {console.error(err);});
+		});
+	}
 	
 	const movieSelected = (movie) => {
 		setSearchVal("");
@@ -261,7 +282,14 @@ const MultiplayerPlay = ({userType, gameId}) => {
 					getActor(result.list[0][0]).then((actor) => {
 						appendToActDisplay(actor.name);
 					});
-					appendToBoxDisplay(movie);
+					getMovie(movie.movie_id).then((m) => {
+						if(m) {
+							appendToBoxDisplay(m);
+						}
+						else {
+							console.log("waiting on getMovie");
+						}
+				  	});
 					movie2actor(movie.movie_id, dailyActors.person2.person_id).then((result) => {
 						if (result) {
 							setGameOver(true);
@@ -272,7 +300,14 @@ const MultiplayerPlay = ({userType, gameId}) => {
 						}
 					});
 					setSelectedMovie(movie);
-					appendToBoxDisplay(movie);
+					getMovie(movie.movie_id).then((m) => {
+						if(m) {
+							appendToBoxDisplay(m);
+						}
+						else {
+							console.log("waiting on getMovie");
+						}
+				  	});
 				} else {
 					setStatus(1);
 					setAlertText(`${selectedMovie.title} and ${movie.title} do not share an actor/director, try again!`)
@@ -282,7 +317,14 @@ const MultiplayerPlay = ({userType, gameId}) => {
 			// if this is the first time
 			movie2actor(movie.movie_id, dailyActors.person1.person_id).then((result) => {
 				if (result) {
-					appendToBoxDisplay(movie);
+					getMovie(movie.movie_id).then((m) => {
+						if(m) {
+						  appendToBoxDisplay(m);
+					  }
+					  else {
+						  console.log("waiting on getMovie");
+					  }
+				  	});
 					appendToActDisplay(dailyActors.person1.name);
 					movie2actor(movie.movie_id, dailyActors.person2.person_id).then((result) => {
 						if (result) {
@@ -367,9 +409,9 @@ const MultiplayerPlay = ({userType, gameId}) => {
 						{
 							(result === "win")
 							?
-							<div><img src={pig} style={{width: "20%"}}/></div>
+							<div><img src={pig} style={{width: "20%"}} alt={"pig"}/></div>
 							:
-							<div><img src={logo} style={{width: "20%"}}/></div>
+							<div><img src={logo} style={{width: "20%"}} alt={"bacon"}/></div>
 						}
 						</div>
 						<h3>You {result}!</h3>
@@ -466,14 +508,14 @@ const MultiplayerPlay = ({userType, gameId}) => {
 					<div id="search_results">
 						{searchData.map((item, index) => {		
 							if(item.release_date) {
-                                                        	return(
-                                                                	<p class="m_result" onClick={() => {movieSelected(item)}} key={index}>{item.title} ({item.release_date.split(" ")[3]})</p>
-                                                        	);
-                                                	} else {
-                                                        	return(
-                                                                	<p class="m_result" onClick={() => {movieSelected(item)}} key={index}>{item.title}</p>
-                                                        	);
-                                                	}
+								return(
+									<p class="m_result" onClick={() => {movieSelected(item)}} key={index}>{item.title} ({item.release_date.split(" ")[3]})</p>
+								);
+							} else {
+								return(
+									<p class="m_result" onClick={() => {movieSelected(item)}} key={index}>{item.title}</p>
+								);
+							}
 						})}
 					</div>}
 					</div>
@@ -491,6 +533,12 @@ const MultiplayerPlay = ({userType, gameId}) => {
 											<img class="movie_poster" src={`${d.poster_path}`} alt="movie_poster"/>
 											<div class="movie_title">
 												<h4 style={{marginBottom: "3px", marginTop: "8px", fontFamily: "eczar"}}><b>{d.title} {d.release_date.split(" ")[3]}</b></h4>
+												{(d.director) &&
+													<p style={{marginBottom: "3px", marginTop: "3px"}}> -Directed by: {d.director.name}</p>
+												}
+												{(d.actors) &&
+													<p style={{marginBottom: "3px", marginTop: "3px"}}> -Starring: {d.actors[0].name}, {d.actors[1].name}, {d.actors[2].name}</p>
+												}
 											</div>
 										</div>
 									</div>
