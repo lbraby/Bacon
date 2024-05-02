@@ -365,9 +365,9 @@ const MultiplayerPlay = ({userType, gameId}) => {
 
 	useEffect(() => {
 		apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/getselectedpeople/`)
-		// get starting actor
+		// get starting actors
 		.then(data => {
-			if(data.userhost_person_id, data.otheruser_person_id) {
+			if (data.userhost_person_id && data.otheruser_person_id) {
 				fetchDailyActors(data.userhost_person_id, data.otheruser_person_id);
 			}
 		})

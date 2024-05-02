@@ -66,8 +66,17 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 				setInDelay(1);
 				submitActor();
 			}
-			if ((totalSeconds - (prevCount + 1)) === -delaySeconds ) {
-				setScreenCount(3);
+			if (inDelay) {
+				apiWrapper(`${process.env.REACT_APP_API_URL}/multiplayer/${gameId}/getselectedpeople/`)
+				// make sure both players are ready before redirecting
+				.then(data => {
+					if (data.userhost_person_id && data.otheruser_person_id) {
+						setScreenCount(3);
+					}
+				})
+				.catch(err => {
+					console.error("error fetching actors " + err);
+				})
 			}
 			// send pulse
 			if(userType === "host") {
