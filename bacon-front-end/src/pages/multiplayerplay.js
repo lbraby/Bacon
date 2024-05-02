@@ -409,7 +409,7 @@ const MultiplayerPlay = ({userType, gameId}) => {
 						{
 							(result === "win")
 							?
-							<div><img src={pig} style={{width: "20%"}} alt={"pig"}/></div>
+							<div><img src={pig} style={{width: "30%"}} alt={"pig"}/></div>
 							:
 							<div><img src={logo} style={{width: "20%"}} alt={"bacon"}/></div>
 						}
@@ -438,6 +438,7 @@ const MultiplayerPlay = ({userType, gameId}) => {
 				}
 				{(status === 4) &&
 					<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
+						<img src={pig} style={{width: "30%"}}/>
 						<h3>You win!</h3>
 						<p>Your opponent left the game!</p>
 						<button 
@@ -453,7 +454,7 @@ const MultiplayerPlay = ({userType, gameId}) => {
 				{(status === 5) &&
 					<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
 						<h3>You finished!</h3>
-						<p>{`${dailyActors.person1.name} and ${dailyActors.person2.name} are both in ${selectedMovie.title}`}</p>
+						<p>{`You connected ${dailyActors.person1.name} to ${dailyActors.person2.name} in ${boxDisplay.length}`}</p>
 						<p>Waiting for your opponent</p>
 					</Modal>
 				}
