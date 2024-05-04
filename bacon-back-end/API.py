@@ -17,7 +17,7 @@ def get_movie(id):
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
     cursor = connection.cursor()
 
-    cursor.execute(f"SELECT * FROM movie m where m.movie_id = {id}")
+    cursor.execute(f"SELECT * FROM movie m where m.movie_id = :id", id=id)
 
     row = cursor.fetchone()
     if not row: return jsonify({"error": "Not found"}), 404
@@ -30,7 +30,7 @@ def get_movie(id):
     }
 
     # get actors in movie
-    cursor.execute(f"select person_id, name from cast_and_crew natural join person where movie_id = {id} and role like 'actor%' order by id")
+    cursor.execute(f"select person_id, name from cast_and_crew natural join person where movie_id = :id and role like 'actor%' order by id", id=id)
     rows = cursor.fetchall()
 
     result["actors"] = list(map(lambda x : {
@@ -38,7 +38,7 @@ def get_movie(id):
             "name": x[1]
         }, rows))
 
-    cursor.execute(f"select person_id, name from cast_and_crew natural join person where movie_id = {id} and role like 'director%'")
+    cursor.execute(f"select person_id, name from cast_and_crew natural join person where movie_id = :id and role like 'director%'", id=id)
     row = cursor.fetchone()
     result["director"] = {"person_id": row[0], "name": row[1]} if row else None
 
@@ -52,7 +52,7 @@ def get_person(id):
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
     cursor = connection.cursor()
 
-    cursor.execute(f"SELECT * FROM person p where p.person_id = {id}")
+    cursor.execute(f"SELECT * FROM person p where p.person_id = :id", id=id)
 
     row = cursor.fetchone()
 
@@ -74,7 +74,7 @@ def movie_person(movie_id, person_id):
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
     cursor = connection.cursor()
 
-    cursor.execute(f"select * from cast_and_crew c where c.movie_id = {movie_id} and c.person_id = {person_id}")
+    cursor.execute(f"select * from cast_and_crew c where c.movie_id = :movie_id and c.person_id = :person_id", movie_id=movie_id, person_id=person_id)
 
     row = cursor.fetchall()
 
@@ -93,10 +93,10 @@ def movie_movie(id1, id2):
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
     cursor = connection.cursor()
 
-    cursor.execute(f"select person_id from cast_and_crew c where c.movie_id = {id1}")
+    cursor.execute(f"select person_id from cast_and_crew c where c.movie_id = :id1", id1=id1)
     row1 = cursor.fetchall()
 
-    cursor.execute(f"select person_id from cast_and_crew c where c.movie_id = {id2}")
+    cursor.execute(f"select person_id from cast_and_crew c where c.movie_id = :id2", id2=id2)
     row2 = cursor.fetchall()
 
     cursor.close()
@@ -122,15 +122,22 @@ def movie_movie(id1, id2):
     else:
         return jsonify({"error": "Not found"}), 404
 
-@app.route("/movies/search/<string:search>/<int:count>", methods=["GET"])
-def search_movie(search, count):
+# pass search term in body of request
+@app.route("/movies/search", methods=["GET"])
+def search_movie():
+    if request.headers.get('Content-Type') != 'application/json':
+        return jsonify({"error": "Content-Type not application/json"}), 404
+
+    try:
+        search = json.loads(request.data)["search"].lower().strip() + "%"
+        count = int(json.loads(request.data)["count"])
+    except:
+        return jsonify({"error": "search and/or count not in request body"}), 404
+
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
     cursor = connection.cursor()
 
-    # clean search input
-    search = search.lower().replace('_', ' ')
-
-    cursor.execute(f"select * from movie where lower(title) like '{search}%' and rownum <= {count}")
+    cursor.execute(f"select * from (select * from movie where lower(title) like :search order by length(title)) where rownum <= :count", search=search, count=count)
 
     rows = cursor.fetchall()
 
@@ -152,15 +159,22 @@ def search_movie(search, count):
     else:
         return jsonify({"error": "Not found"}), 404
 
-@app.route("/people/search/<string:search>/<int:count>", methods=["GET"])
-def search_person(search, count):
+# pass search term in body of request
+@app.route("/people/search/", methods=["GET"])
+def search_person():
+    if request.headers.get('Content-Type') != 'application/json':
+        return jsonify({"error": "Content-Type not application/json"}), 404
+
+    try:
+        search = json.loads(request.data)["search"].lower().strip() + "%"
+        count = int(json.loads(request.data)["count"])
+    except:
+        return jsonify({"error": "search and/or count not in request body"}), 404
+    
     connection = cx_Oracle.connect(user=username, password=password, dsn=dsn)
     cursor = connection.cursor()
 
-    # clean search input
-    search = search.lower().replace('_', ' ')
-
-    cursor.execute(f"select * from popular_actors_mv where lower(name) like '{search}%' and rownum <= {count}")
+    cursor.execute(f"select * from (select * from popular_actors_mv where lower(name) like :search order by length(name)) where rownum <= :count", search=search, count=count)
 
     rows = cursor.fetchall()
 
@@ -183,7 +197,7 @@ def search_person(search, count):
         return jsonify({"error": "Not found"}), 404
 
 def query_person(id, cursor):
-    cursor.execute(f"SELECT * FROM person p where p.person_id = {id}")
+    cursor.execute(f"SELECT * FROM person p where p.person_id = :id", id=id)
     p = cursor.fetchone()
     return({
         "person_id":p[0],
@@ -209,11 +223,11 @@ def dailymode():
             row1, row2 = random.sample(rows, 2)
             person1 = query_person(row1[0], cursor)
             person2 = query_person(row2[0], cursor)
-			
+
         try:
             cursor.execute("insert into dailymode (person1_id, person2_id, todays_date) \
-                           values (:person1_id, :person2_id, trunc(sysdate))", 
-						   person1_id=person1["person_id"], person2_id=person2["person_id"])
+                           values (:person1_id, :person2_id, trunc(sysdate))",
+                                                   person1_id=person1["person_id"], person2_id=person2["person_id"])
             connection.commit()
         except cx_Oracle.DatabaseError as e:
             connection.rollback()
