@@ -5,6 +5,7 @@ import "./singleplayer.css";
 import Modal from "./modal";
 import logo from "./bacon_horizontal.png";
 import pig from "./pig.gif";
+
 const Singleplayer = () => {
 	const [firstTimeDone, setFirstTimeDone] = useState(false); //Flag for first time through
 	const [dailyActors, setDailyActors] = useState({}); // 2 daily actors
@@ -148,14 +149,6 @@ const Singleplayer = () => {
 						}
 					});
 					setSelectedMovie(movie);
-					getMovie(movie.movie_id).then((m) => {
-  						if(m) {
-							appendToBoxDisplay(m);
-						}
-						else {
-							console.log("waiting on getMovie");
-						}
-					});
 				} else {
 					setStatus(1);
 					setAlertText(`${selectedMovie.title} and ${movie.title} do not share an actor/director, try again!`)
@@ -230,9 +223,17 @@ const Singleplayer = () => {
 		<div id="main_box">
 			{(status === 3) &&
 				<Modal isOpen={modalIsOpen} onClickOutside={() => {}}>
-					<img src={pig} style={{width: "30%"}}/>
+					<img src={pig} style={{width: "30%"}} alt="pig-gif"/>
 					<h3>Congratulations!</h3>
 					<p>{`You connected ${dailyActors.person1.name} to ${dailyActors.person2.name} in ${boxDisplay.length}!`}</p>
+					<p>{`🥓Bacon ${dailyActors.game_id}🥓`}</p>
+					<p>{dailyActors.person1.name}</p>
+					{boxDisplay.map((movie, index) => {
+						return(
+							<p>{`🎬${index + 1}: ${movie.title}`}</p>
+						)}
+					)}
+					<p>{dailyActors.person2.name}</p>
 					<button 
 						onClick={() => {
 							setModalIsOpen(0);
