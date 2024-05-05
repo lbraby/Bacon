@@ -123,7 +123,7 @@ def movie_movie(id1, id2):
         return jsonify({"error": "Not found"}), 404
 
 # pass search term in body of request
-@app.route("/movies/search", methods=["GET"])
+@app.route("/movies/search/", methods=["PUT"])
 def search_movie():
     if request.headers.get('Content-Type') != 'application/json':
         return jsonify({"error": "Content-Type not application/json"}), 404
@@ -160,7 +160,7 @@ def search_movie():
         return jsonify({"error": "Not found"}), 404
 
 # pass search term in body of request
-@app.route("/people/search/", methods=["GET"])
+@app.route("/people/search/", methods=["PUT"])
 def search_person():
     if request.headers.get('Content-Type') != 'application/json':
         return jsonify({"error": "Content-Type not application/json"}), 404
