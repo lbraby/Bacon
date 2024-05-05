@@ -348,19 +348,23 @@ const MultiplayerPlay = ({userType, gameId}) => {
 
 	useEffect(() => {
 		// call search api when search bar updated
-		fetch(`${process.env.REACT_APP_API_URL}/movies/search/${searchVal}/10`)
-				.then((resp) => {
-					if(!resp.ok) {
-						throw new Error ("we got ourselves a 404!")
-					} else {
-						return(resp.json());
-					}
-				})
-				.then(data => setSearchData(data.data))
-				.catch(err => {
-					console.error(err);
-					setSearchData([]);
-				})
+		const options = {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				count: 10,
+				search: searchVal
+			})
+		};
+		
+		apiWrapper(`${process.env.REACT_APP_API_URL}/movies/search`, options)
+			.then(data => setSearchData(data.data))
+			.catch(err => {
+				console.error(err);
+				setSearchData([]);
+			})
 	},[searchVal]);
 
 	useEffect(() => {

@@ -5,6 +5,8 @@ import "./singleplayer.css";
 import Modal from "./modal";
 import logo from "./bacon_horizontal.png";
 import pig from "./pig.gif";
+import { apiWrapper } from "../services/apiServices";
+
 const Singleplayer = () => {
 	const [firstTimeDone, setFirstTimeDone] = useState(false); //Flag for first time through
 	const [dailyActors, setDailyActors] = useState({}); // 2 daily actors
@@ -196,19 +198,23 @@ const Singleplayer = () => {
 
 	useEffect(() => {
 		// call search api when search bar updated
-		fetch(`${process.env.REACT_APP_API_URL}/movies/search/${searchVal}/10`)
-				.then((resp) => {
-					if(!resp.ok) {
-						throw new Error ("we got ourselves a 404!")
-					} else {
-						return(resp.json());
-					}
-				})
-				.then(data => setSearchData(data.data))
-				.catch(err => {
-					console.error(err);
-					setSearchData([]);
-				})
+		const options = {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				count: 10,
+				search: searchVal
+			})
+		};
+		
+		apiWrapper(`${process.env.REACT_APP_API_URL}/movies/search`, options)
+			.then(data => setSearchData(data.data))
+			.catch(err => {
+				console.error(err);
+				setSearchData([]);
+			})
 	},[searchVal]);
 
 	useEffect(() => {

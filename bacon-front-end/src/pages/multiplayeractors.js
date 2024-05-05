@@ -49,12 +49,23 @@ const MultiplayerActors = ({gameId, setScreenCount, userType}) => {
 	};
 
 	useEffect(() => {
-		apiWrapper(`${process.env.REACT_APP_API_URL}/people/search/${searchVal}/10`)
-		.then(data => setSearchData(data.data))
-		.catch(err => {
-			console.error(err);
-			setSearchData([]);
-		})
+		const options = {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				count: 10,
+				search: searchVal
+			})
+		};
+		
+		apiWrapper(`${process.env.REACT_APP_API_URL}/people/search/`, options)
+			.then(data => setSearchData(data.data))
+			.catch(err => {
+				console.error(err);
+				setSearchData([]);
+			})
 	}, [searchVal]);
 
 	useEffect(() => {
