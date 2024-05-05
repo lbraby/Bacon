@@ -201,7 +201,7 @@ const Singleplayer = () => {
 			})
 		};
 		
-		apiWrapper(`${process.env.REACT_APP_API_URL}/movies/search`, options)
+		apiWrapper(`${process.env.REACT_APP_API_URL}/movies/search/`, options)
 			.then(data => setSearchData(data.data))
 			.catch(err => {
 				console.error(err);
