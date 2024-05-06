@@ -8,6 +8,12 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+# define dsn, username, password for when API launched using gunicorn:
+# to run using gunicorn: gunicorn API:app --name baconAPI --workers 2 --bind 0.0.0.0:8000 --daemon
+dsn = cx_Oracle.makedsn('localhost', '1521')
+username = 'guest'
+password = 'guest'
+
 @app.route("/", methods=["GET"])
 def test():
     return jsonify({"status": "success"})
