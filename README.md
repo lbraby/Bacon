@@ -1,4 +1,8 @@
 # The Bacon Project
+**Bacon** is a web-based game inspired by the *Six Degrees of Kevin Bacon* concept, where players connect actors through shared film appearances in as few steps as possible. The game features two modes:
+- **Daily Mode**: Players are given two randomly selected actors and must find the shortest connection path between them.
+- **PvP Mode**: Each player selects and actor, and they race to see who can connect their pair more quickly and efficiently.
+This game was developed as a final project for *CSE 40746: Advanced Database Projects*, where it earned second place in the end-of-semester class competition.
 ## Setup Steps
 ### Installing and running React App
 1. Navigate to the bacon-front-end directory
